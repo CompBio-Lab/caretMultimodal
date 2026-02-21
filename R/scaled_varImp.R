@@ -12,7 +12,7 @@ scaled_varImp <- function(
     ...
 ) {
 
-  importance_dt <- caret::varImp(model)$importance
+  importance_dt <- caret::varImp(model, scale = FALSE)$importance
   importance_dt <- importance_dt / sum(importance_dt) * 100
   importance_dt <- data.table::as.data.table(importance_dt, keep.rownames = "Model")
   data.table::setnames(importance_dt, "Overall", "Relative Contribution")
