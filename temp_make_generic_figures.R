@@ -39,13 +39,27 @@ stacked_model <- caretMultimodal::caret_stack(
   tuneGrid = tuneGrid
 )
 
-library(patchwork)
-
 metric_func <- function(pred, targ) {
   pROC::roc(response = targ, predictor = pred, quiet = TRUE)$auc
 }
 
-plots <- (plot_roc(stacked_model)| plot_model_contributions(stacked_model)| plot_feature_contributions(stacked_model)) /
-(plot_ablation(stacked_model, metric_func, "AUROC") | plot_ablation(stacked_model, metric_func, "AUROC", reverse = TRUE) | plot_metric(stacked_model, metric_func, "AUROC"))
+plot_list <- list(
+  roc                 = plot_roc(stacked_model),
+  model_contrib       = plot_model_contributions(stacked_model),
+  feature_contrib     = plot_feature_contributions(stacked_model),
+  ablation_forward    = plot_ablation(stacked_model, metric_func, "AUROC"),
+  ablation_reverse    = plot_ablation(stacked_model, metric_func, "AUROC", reverse = TRUE),
+  metric              = plot_metric(stacked_model, metric_func, "AUROC")
+)
 
-print(plots)
+# Save each figure with identical dimensions
+for (nm in names(plot_list)) {
+  ggsave(
+    filename = paste0("plots/", nm, ".png"),
+    plot = plot_list[[nm]],
+    width = 180,
+    height = 120,
+    units = "mm",
+    dpi = 300
+  )
+}

@@ -17,7 +17,11 @@ tuneGrid <- expand.grid(alpha = alphas, lambda = lambdas)
 
 # Set up trControl for leave-one-sample-out cross-validation
 
-loso_folds <- caret::groupKFold(featurepatients, k = length(unique(featurepatients)))
+# loso_folds <- caret::groupKFold(featurepatients, k = length(unique(featurepatients)))
+
+loso_folds <- lapply(unique(featurepatients), function(p) {
+  which(featurepatients != p)  # indices of all samples NOT in this patient
+})
 
 trControl <- caret::trainControl(
   method = "cv",
