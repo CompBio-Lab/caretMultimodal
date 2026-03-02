@@ -32,6 +32,13 @@ which is used for stacking multiple models on a single dataset.
 - Built-in evaluation tools for performance assessment, ROC curves, and variable importance  
 - Detailed error messages to simplify debugging
 
+## Installation
+
+The package can be installed using devtools
+
+``` r
+devtools::install_github("CompBio-Lab/caretMultimodal")
+```
 
 ## Classification Example
 
@@ -189,11 +196,3 @@ plot_metric(
 
 ```
 ![](res/pregnancy_metric.png)
-
-## Installation
-
-The package can be installed using devtools
-
-``` r
-devtools::install_github("JoshD898/caretMultimodal")
-```
