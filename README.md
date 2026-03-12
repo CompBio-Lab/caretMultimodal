@@ -1,10 +1,10 @@
 <!-- badges: start -->
 
 [![Codecov test
-coverage](https://codecov.io/gh/JoshD898/caretMultimodal/graph/badge.svg)](https://app.codecov.io/gh/JoshD898/caretMultimodal)
-[![R-CMD-check](https://github.com/JoshD898/caretMultimodal/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/JoshD898/caretMultimodal/actions/workflows/R-CMD-check.yaml)
-[![CodeFactor](https://www.codefactor.io/repository/github/joshd898/caretmultimodal/badge)](https://www.codefactor.io/repository/github/joshd898/caretmultimodal)
-![Code Size](https://img.shields.io/github/languages/code-size/joshD898/caretMultimodal)
+coverage](https://codecov.io/gh/CompBio-Lab/caretMultimodal/graph/badge.svg)](https://app.codecov.io/gh/CompBio-Lab/caretMultimodal)
+[![R-CMD-check](https://github.com/CompBio-Lab/caretMultimodal/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/CompBio-Lab/caretMultimodal/actions/workflows/R-CMD-check.yaml)
+[![CodeFactor](https://www.codefactor.io/repository/github/compbio-lab/caretmultimodal/badge)](https://www.codefactor.io/repository/github/compbio-lab/caretmultimodal)
+![Code Size](https://img.shields.io/github/languages/code-size/CompBio-Lab/caretMultimodal)
 
 <!-- badges: end -->
 
