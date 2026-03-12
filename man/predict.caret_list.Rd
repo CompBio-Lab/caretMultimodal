@@ -4,15 +4,14 @@
 \alias{predict.caret_list}
 \title{Create a matrix of predictions for each model in a caret_list}
 \usage{
-\method{predict}{caret_list}(object, data_list, excluded_class_id = 1L, ...)
+\method{predict}{caret_list}(object, data_list, drop_redundant_class = TRUE, ...)
 }
 \arguments{
 \item{object}{A \code{caret_list} object}
 
 \item{data_list}{A list of datasets to predict on, with each dataset matching the corresponding model in \code{caret_list}.}
 
-\item{excluded_class_id}{An integer indicating the class index to exclude from prediction output.
-If \code{NULL}, no class is excluded. Default is 1L.}
+\item{drop_redundant_class}{A boolean controlling whether to exclude the first class level from prediction output. Default is \code{TRUE}.}
 
 \item{...}{Additional arguments to pass to \code{caret::predict}}
 }

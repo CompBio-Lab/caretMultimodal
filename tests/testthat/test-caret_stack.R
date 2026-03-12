@@ -82,7 +82,7 @@ caret_stack_generic_test <- function(target, data_list, method) {
   test_that("compute_ablation.caret_stack", {
     metric_fun <- function(x, y) { x[[1]] }
 
-    ablation <- suppressWarnings(compute_ablation(stack, metric_function = metric_fun))
+    ablation <- suppressWarnings(compute_ablation(stack, metric_function = metric_fun, metric_name = "metric"))
 
     expect_s3_class(ablation, "data.table")
     expect_equal(nrow(ablation), length(data_list) + 1)

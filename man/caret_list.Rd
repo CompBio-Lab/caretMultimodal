@@ -24,7 +24,12 @@ caret_list(
 \item{method}{The method to train the models with. Can be a custom method or one found in \code{caret::modelLookup()}.}
 
 \item{identifier_column_name}{The name of a column that connects the rows in the dataset (ex. a participant ID).
-If provided, this column must be present in all datasets within the \code{data_list} for proper matching. Use this if the datasets have different numbers of rows.}
+If provided, this column must be present in all datasets within the \code{data_list} for proper matching.
+Use this if the datasets have different numbers of rows.
+
+Currently, providing \code{identifier_column_name} disables support for custom \code{trControl}, because a new
+resampling scheme must be constructed for each dataset after row matching, which may invalidate
+user-supplied fold indices.}
 
 \item{trControl}{Control for use with the \code{caret::train} function.
 If \code{NULL}, a default control will be constructed depending on the target type.}

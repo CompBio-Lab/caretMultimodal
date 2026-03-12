@@ -6,7 +6,7 @@
 \usage{
 \method{oof_predictions}{caret_stack}(
   object,
-  excluded_class_id = 1L,
+  drop_redundant_class = TRUE,
   aggregate_resamples = TRUE,
   ...
 )
@@ -14,10 +14,9 @@
 \arguments{
 \item{object}{A \code{caret_stack} object}
 
-\item{excluded_class_id}{An integer indicating the class index to exclude from ensemble prediction output.
-If \code{NONE}, no class is excluded. Default is 1L.}
+\item{drop_redundant_class}{A boolean controlling whether to exclude the first class level from prediction output. Default is \code{TRUE}.}
 
-\item{aggregate_resamples}{Logical, whether to aggregate resamples across folds.}
+\item{aggregate_resamples}{Logical, whether to aggregate resamples across folds. Default is \code{TRUE}.}
 
 \item{...}{Additional arguments}
 }

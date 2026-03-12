@@ -4,15 +4,14 @@
 \alias{predict.caret_stack}
 \title{Create a matrix of predictions for a \code{caret_stack} object.}
 \usage{
-\method{predict}{caret_stack}(object, data_list, excluded_class_id = 1L, ...)
+\method{predict}{caret_stack}(object, data_list, drop_redundant_class = TRUE, ...)
 }
 \arguments{
 \item{object}{A \code{caret_stack} object}
 
 \item{data_list}{A list of datasets to predict on, with each dataset matching the corresponding model in \code{caret_list}.}
 
-\item{excluded_class_id}{An integer indicating the class index to exclude from prediction output.
-If \code{NULL}, no class is excluded. Default is 1L.}
+\item{drop_redundant_class}{A boolean controlling whether to exclude the first class from prediction output. Default is \code{TRUE}.}
 
 \item{...}{Additional arguments}
 }

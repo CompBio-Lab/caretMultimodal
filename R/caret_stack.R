@@ -113,7 +113,7 @@ caret_stack <- function(
 predict.caret_stack <- function(
     object,
     data_list,
-    drop_redundant_class_class = TRUE,
+    drop_redundant_class = TRUE,
     ...
   ) {
 
@@ -134,11 +134,13 @@ predict.caret_stack <- function(
     ...
   )
 
+  pred <- data.table::as.data.table(pred)
+
   if (is_classifier) {
     if (drop_redundant_class) {
       pred <- pred[, -1]
     } else {
-      base_predictions <- attr(base_predictions, "full_pred_train_data")
+      base_predictions <- attr(object, "full_pred_train_data")
     }
   }
 
@@ -597,7 +599,6 @@ compute_ablation.caret_stack <- function(
     training_data[[remove_model]] <- NULL
 
     oof_pred <- .get_oof_preds(ensemble_model, aggregate_resamples = TRUE)
-    #TODO test this
     oof_pred <- as.numeric(oof_pred[[1]])
 
 

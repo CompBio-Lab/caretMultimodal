@@ -6,18 +6,21 @@
 \usage{
 \method{oof_predictions}{caret_list}(
   object,
-  excluded_class_id = 1L,
+  drop_redundant_class = TRUE,
   aggregate_resamples = TRUE,
+  intersection_only = TRUE,
   ...
 )
 }
 \arguments{
 \item{object}{A \code{caret_list} object}
 
-\item{excluded_class_id}{An integer indicating the class index to exclude from prediction output.
-If \code{NONE}, no class is excluded. Default is 1L.}
+\item{drop_redundant_class}{A boolean controlling whether to exclude the first class level from prediction output. Default is \code{TRUE}.}
 
 \item{aggregate_resamples}{Logical, whether to aggregate resamples across folds.}
+
+\item{intersection_only}{Logical, whether to trim down the out of fold predictions to only the intersection of
+samples that have data in all datasets.}
 
 \item{...}{Additional arguments}
 }
@@ -29,4 +32,5 @@ Retrieve the out-of-fold predictions corresponding to the best
 hyperparameter setting of a trained caret model. These predictions come from
 the resampling process (not the final refit) and can optionally be aggregated
 across resamples to produce a single prediction per training instance.
+TODO touch up description
 }

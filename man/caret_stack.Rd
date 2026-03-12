@@ -29,7 +29,8 @@ If \code{NULL}, the target vector used to train the base models will be used.}
 If \code{NULL}, default metric will be constructed depending on the target type.}
 
 \item{trControl}{Control for use with the \code{caret::train} function.
-If \code{NULL}, a default control will be constructed depending on the target type.}
+If \code{NULL}, a default control will be constructed depending on the target type.
+TODO hyperlink default arguments + add quick description}
 
 \item{...}{Additional arguments to pass to \code{caret::train}}
 }

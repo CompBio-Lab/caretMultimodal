@@ -19,5 +19,5 @@ If \code{TRUE}, the highest contributing model is removed. Default is \code{FALS
 A \code{data.table}
 }
 \description{
-Contructs a bar plot with the output of the compute_ablation method.
+Contructs a bar plot with the output of the \code{compute_ablation} method.
 }

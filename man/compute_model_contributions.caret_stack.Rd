@@ -14,7 +14,7 @@
 \item{...}{Additional arguments}
 }
 \value{
-A \code{ggplot2} bar chart
+A \code{data.table}
 }
 \description{
 The relative contributions are calculated using the \code{caret::varImp} function on the ensemble model.
