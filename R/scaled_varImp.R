@@ -13,6 +13,19 @@ scaled_varImp <- function(
 ) {
 
   importance_dt <- caret::varImp(model, scale = FALSE)$importance
+
+
+  # Sum the coefficients for multiclass classification
+
+  if (ncol(importance_dt) > 1) { # This is assuming this only occurs for multiclass regression cases
+    importance_dt <- rowsum(
+      rowSums(importance_dt),
+      group = sub("\\..*", "", rownames(importance_dt))
+    )
+
+    colnames(importance_dt) <- "Overall"
+  }
+
   importance_dt <- importance_dt / sum(importance_dt) * 100
   importance_dt <- data.table::as.data.table(importance_dt, keep.rownames = "Model")
   data.table::setnames(importance_dt, "Overall", "Relative Contribution")

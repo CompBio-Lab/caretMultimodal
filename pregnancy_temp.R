@@ -32,12 +32,16 @@ trControl <- caret::trainControl(
 
 # Train the base models
 
+
+doParallel::registerDoParallel(cores = 11)
+
 pregnancy_models <- caretMultimodal::caret_list(
   data_list = InputData,
   target = featureweeks,
   method = "glmnet",
   tuneGrid = tuneGrid,
-  trControl = trControl
+  trControl = trControl,
+  do_parallel = TRUE
 )
 
 # Train the ensemble model

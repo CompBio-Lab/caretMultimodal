@@ -325,67 +325,85 @@ plot_multiclass_roc <- function(
 
   caret_stack <- object
 
-  predictions <- oof_predictions.caret_stack(caret_stack)
+  predictions <- oof_predictions.caret_stack(caret_stack, drop_redundant_class = FALSE)
+  modalities <- names(attr(caret_stack, "model_colors"))
   truth <- caret_stack$ensemble$trainingData$.outcome
   classes <- levels(truth)
+
 
   results_list <- list()
   aucs <- c()
 
-  # This also needs to loop over every dataset
   # total lines would be N_datasets * n_classes
   if (type == "ovr") {
-    for (cls in classes) {
-      binary_truth <- factor(ifelse(truth == cls, cls, "rest"),
-                             levels = c("rest", cls))
-      roc_obj <- pROC::roc(
-        response   = binary_truth,
-        predictor  = predictions[[cls]], # Need to fix this
-        quiet      = TRUE
-      )
-      auc_val        <- as.numeric(pROC::auc(roc_obj))
-      aucs[cls]      <- auc_val
-      results_list[[cls]] <- data.frame(
-        FPR        = 1 - roc_obj$specificities,
-        TPR        = roc_obj$sensitivities,
-        Class      = sprintf("%s (AUC = %.3f)", cls, auc_val),
-        Comparison = "ovr"
-      )
+    for (modality in modalities) {
+      for (class in classes) {
+        binary_truth <- factor(ifelse(truth == class, class, "rest"),
+                               levels = c("rest", class))
+        roc_obj <- pROC::roc(
+          response   = binary_truth,
+          predictor  = predictions[[paste0(modality, ".", class)]],
+          quiet      = TRUE
+        )
+
+        auc_val        <- as.numeric(pROC::auc(roc_obj))
+
+        results_list[[length(results_list) + 1]] <- data.table::data.table(
+          FPR      = 1 - roc_obj$specificities,
+          TPR      = roc_obj$sensitivities,
+          Modality = modality,
+          Class    = class,
+          AUC      = auc_val,
+          Comparison = "ovr"
+        )[, .(TPR = mean(TPR)), by = .(FPR, Modality, Class, AUC, Comparison)] # Smooths out the graph
+      }
     }
   }
 
+  roc_data <- data.table::rbindlist(results_list)
 
-  return(results_list)
+  ggplot2::ggplot(roc_data,
+                  ggplot2::aes(x = .data$FPR, y = .data$TPR, color = .data$Modality, linetype = .data$Class)) +
+    ggplot2::geom_line(linewidth = 1.2) +
+    ggplot2::geom_abline(slope = 1, intercept = 0, linetype = "dotted") +
+    ggplot2::labs(title = "ROC Curves", x = "False Positive Rate (FPR)", y = "True Positive Rate (TPR)") +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      legend.position = c(0.95, 0.05),
+      legend.justification = c(0.95, 0.05),
+      legend.background = ggplot2::element_rect(fill = "white", color = "black"),
+      plot.title = ggplot2::element_text(hjust = 0.5)
+    ) +
+    ggplot2::scale_color_manual(values = attr(caret_stack, "model_colors")) +
+    ggplot2::scale_linetype_manual(values = 1:length(unique(roc_data$Class)))
+
 
   # -------------------------
   # Pairwise
   # -------------------------
-  if (type == "pairwise") {
-    combs <- combn(classes, 2, simplify = FALSE)
-    for (pair in combs) {
-      cls1 <- pair[1]; cls2 <- pair[2]
-      idx          <- truth %in% c(cls1, cls2)
-      binary_truth <- droplevels(truth[idx])
-      roc_obj <- pROC::roc(
-        response  = binary_truth,
-        predictor = probs[idx, cls2],
-        levels    = c(cls1, cls2),
-        quiet     = TRUE
-      )
-      auc_val          <- as.numeric(pROC::auc(roc_obj))
-      comparison_name  <- paste(cls1, "vs", cls2)
-      aucs[comparison_name] <- auc_val
-      results_list[[comparison_name]] <- data.frame(
-        FPR        = 1 - roc_obj$specificities,
-        TPR        = roc_obj$sensitivities,
-        Class      = sprintf("%s (AUC = %.3f)", comparison_name, auc_val),
-        Comparison = "pairwise"
-      )
-    }
-  }
-
-  roc_df <- do.call(rbind, results_list)
-  rownames(roc_df) <- NULL
+  # if (type == "pairwise") {
+  #   combs <- combn(classes, 2, simplify = FALSE)
+  #   for (pair in combs) {
+  #     cls1 <- pair[1]; cls2 <- pair[2]
+  #     idx          <- truth %in% c(cls1, cls2)
+  #     binary_truth <- droplevels(truth[idx])
+  #     roc_obj <- pROC::roc(
+  #       response  = binary_truth,
+  #       predictor = probs[idx, cls2],
+  #       levels    = c(cls1, cls2),
+  #       quiet     = TRUE
+  #     )
+  #     auc_val          <- as.numeric(pROC::auc(roc_obj))
+  #     comparison_name  <- paste(cls1, "vs", cls2)
+  #     aucs[comparison_name] <- auc_val
+  #     results_list[[comparison_name]] <- data.frame(
+  #       FPR        = 1 - roc_obj$specificities,
+  #       TPR        = roc_obj$sensitivities,
+  #       Class      = sprintf("%s (AUC = %.3f)", comparison_name, auc_val),
+  #       Comparison = "pairwise"
+  #     )
+  #   }
+  # }
 }
 
 
