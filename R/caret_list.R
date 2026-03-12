@@ -152,11 +152,10 @@ predict.caret_list <- function(
 
   data_list <- lapply(data_list, data.table::as.data.table)
 
+  is_classifier <- caret_list[[1]]$modelType == "Classification"
 
   prediction_list <- lapply(seq_along(caret_list), function(i) {
     model <- caret_list[[i]]
-
-    is_classifier <- model$modelType == "Classification"
 
     if (is_classifier && !is.function(model$modelInfo$prob)) {
       stop("No probability function found. Re-fit with a method that supports prob.", call. = FALSE)
@@ -169,18 +168,24 @@ predict.caret_list <- function(
       ...
     )
 
-    if (is_classifier && drop_redundant_class) {
-      pred <- pred[ ,-1]
-    }
-
     pred
   })
 
   names(prediction_list) <- names(caret_list)
 
-  prediction_matrix <- data.table::as.data.table(prediction_list)
+  full_matrix <- data.table::as.data.table(prediction_list)
 
-  prediction_matrix
+
+  # Adding the full matrix as an attribute is the easiest way I could think of to
+  # access it later on in caret_stack methods
+  if (is_classifier && drop_redundant_class) {
+    class_drop_list <- lapply(prediction_list, function(pred) pred[ ,-1])
+    class_drop_matrix <- data.table::as.data.table(class_drop_list)
+    attr(class_drop_matrix, "full_pred_matrix") <- full_matrix
+    return(class_drop_matrix)
+  }
+
+  full_matrix
 }
 
 #' @title Out-of-fold predictions from a caret_list
@@ -206,10 +211,11 @@ oof_predictions.caret_list <- function(
 
   caret_list <- object
 
+  is_classifier <- caret_list[[1]]$modelType == "Classification"
+
   prediction_list <- lapply(seq_along(caret_list), function(i) {
 
     model <- caret_list[[i]]
-    is_classifier <- model$modelType == "Classification"
 
     if (is.null(model$control$savePredictions) | !model$control$savePredictions %in% c("all", "final", TRUE)) {
       stop("Must have savePredictions = 'all', 'final', or TRUE in trainControl.", call. = FALSE)
@@ -224,10 +230,6 @@ oof_predictions.caret_list <- function(
     }
 
     pred <- .get_oof_preds(model, aggregate_resamples)
-
-    if (is_classifier && drop_redundant_class) {
-      pred <- pred[ ,-1]
-    }
 
     pred
   })
@@ -248,7 +250,18 @@ oof_predictions.caret_list <- function(
 
   names(prediction_list) <- names(caret_list)
 
-  prediction_list <- data.table::as.data.table(prediction_list)
+  full_matrix <- data.table::as.data.table(prediction_list)
+
+  # Adding the full matrix as an attribute is the easiest way I could think of to
+  # access it later on in caret_stack methods
+  if (is_classifier && drop_redundant_class) {
+    class_drop_list <- lapply(prediction_list, function(pred) pred[ ,-1])
+    class_drop_matrix <- data.table::as.data.table(class_drop_list)
+    attr(class_drop_matrix, "full_pred_matrix") <- full_matrix
+    return(class_drop_matrix)
+  }
+
+  full_matrix
 }
 
 

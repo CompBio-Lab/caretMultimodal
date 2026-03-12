@@ -54,10 +54,10 @@ caret_stack <- function(
       call. = FALSE
     )
 
-    predictions <- predict.caret_list(caret_list, data_list)
+    predictions <- predict.caret_list(caret_list, data_list, drop_redundant_class = TRUE)
   } else {
 
-    predictions <- oof_predictions.caret_list(caret_list, intersection_only = TRUE)
+    predictions <- oof_predictions.caret_list(caret_list, intersection_only = TRUE, drop_redundant_class = TRUE)
 
     if (is.null(attr(caret_list[[1]], "identifier_column"))) {
       target <- attr(caret_list, "target")
@@ -93,6 +93,7 @@ caret_stack <- function(
   )
 
   attr(caret_stack, "model_colors") <- model_colors
+  attr(caret_stack, "full_pred_train_data") <- attr(predictions, "full_pred_matrix") # I want this saved for oof_predictions for muticlass classifiers
 
   class(caret_stack) <- "caret_stack"
 
@@ -133,8 +134,12 @@ predict.caret_stack <- function(
     ...
   )
 
-  if (is_classifier && drop_redundant_class_class) {
-    pred <- pred[, -1]
+  if (is_classifier) {
+    if (drop_redundant_class) {
+      pred <- pred[, -1]
+    } else {
+      base_predictions <- attr(base_predictions, "full_pred_train_data")
+    }
   }
 
   if (ncol(pred) > 1) {
@@ -190,9 +195,16 @@ oof_predictions.caret_stack <- function(
   }
 
   pred <- .get_oof_preds(model, aggregate_resamples)
+  training_data <- subset(model$trainingData, subset = TRUE, select = -c(.outcome))
 
-  if (is_classifier && drop_redundant_class) {
-    pred <- pred[, -1]
+  # This either drops 1 column from the ensemble prediction,
+  # or makes sure all columns are present in the base predictions
+  if (is_classifier) {
+    if (drop_redundant_class) {
+      pred <- pred[, -1]
+    } else {
+      training_data <- attr(caret_stack, "full_pred_train_data")
+    }
   }
 
   # nicely name the ensemble predictions
@@ -201,8 +213,6 @@ oof_predictions.caret_stack <- function(
   } else {
     names(pred) <- "ensemble"
   }
-
-  training_data <- subset(model$trainingData, subset = TRUE, select = -c(.outcome))
 
   combined_preds <- cbind(training_data, pred)
 
