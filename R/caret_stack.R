@@ -105,15 +105,14 @@ caret_stack <- function(
 #' @title Create a matrix of predictions for a `caret_stack` object.
 #' @param object A `caret_stack` object
 #' @param data_list A list of datasets to predict on, with each dataset matching the corresponding model in `caret_list`.
-#' @param excluded_class_id An integer indicating the class index to exclude from prediction output.
-#' If `NULL`, no class is excluded. Default is 1L.
+#' @param drop_redundant_class A boolean controlling whether to exclude the first class from prediction output. Default is `TRUE`.
 #' @param ... Additional arguments
 #' @return A `data.table::data.table` of predictions for base and ensemble models.
 #' @export
 predict.caret_stack <- function(
     object,
     data_list,
-    excluded_class_id = 1L,
+    drop_redundant_class_class = TRUE,
     ...
   ) {
 
@@ -134,8 +133,8 @@ predict.caret_stack <- function(
     ...
   )
 
-  if (!is.null(excluded_class_id)) {
-    pred <- .drop_excluded_class(pred, all_classes = ensemble$levels, excluded_class_id)
+  if (is_classifier && drop_redundant_class_class) {
+    pred <- pred[, -1]
   }
 
   if (ncol(pred) > 1) {
@@ -161,15 +160,14 @@ predict.caret_stack <- function(
 #'   first class index.
 #'
 #' @param object A `caret_stack` object
-#' @param excluded_class_id An integer indicating the class index to exclude from ensemble prediction output.
-#' If `NONE`, no class is excluded. Default is 1L.
+#' @param drop_redundant_class A boolean controlling whether to exclude the first class level from prediction output. Default is `TRUE`.
 #' @param aggregate_resamples Logical, whether to aggregate resamples across folds. Default is `TRUE`.
 #' @param ... Additional arguments
 #' @return A `data.table::data.table` of OOF predictions
 #' @export
 oof_predictions.caret_stack <- function(
     object,
-    excluded_class_id = 1L,
+    drop_redundant_class = TRUE,
     aggregate_resamples = TRUE,
     ...
   ) {
@@ -193,8 +191,8 @@ oof_predictions.caret_stack <- function(
 
   pred <- .get_oof_preds(model, aggregate_resamples)
 
-  if (!is.null(excluded_class_id)) {
-    pred <- .drop_excluded_class(pred, all_classes = model$levels, excluded_class_id)
+  if (is_classifier && drop_redundant_class) {
+    pred <- pred[, -1]
   }
 
   # nicely name the ensemble predictions
@@ -304,6 +302,80 @@ plot_roc.caret_stack <- function(
     ggplot2::scale_color_manual(values = attr(caret_stack, "model_colors"), labels = legend_labels) +
     ggplot2::scale_linetype_manual(values = 1:length(unique(roc_data$Model)),
                                    labels = legend_labels)
+}
+
+
+
+
+
+plot_multiclass_roc <- function(
+    object,
+    type
+) {
+
+  caret_stack <- object
+
+  predictions <- oof_predictions.caret_stack(caret_stack)
+  truth <- caret_stack$ensemble$trainingData$.outcome
+  classes <- levels(truth)
+
+  results_list <- list()
+  aucs <- c()
+
+  # This also needs to loop over every dataset
+  # total lines would be N_datasets * n_classes
+  if (type == "ovr") {
+    for (cls in classes) {
+      binary_truth <- factor(ifelse(truth == cls, cls, "rest"),
+                             levels = c("rest", cls))
+      roc_obj <- pROC::roc(
+        response   = binary_truth,
+        predictor  = predictions[[cls]], # Need to fix this
+        quiet      = TRUE
+      )
+      auc_val        <- as.numeric(pROC::auc(roc_obj))
+      aucs[cls]      <- auc_val
+      results_list[[cls]] <- data.frame(
+        FPR        = 1 - roc_obj$specificities,
+        TPR        = roc_obj$sensitivities,
+        Class      = sprintf("%s (AUC = %.3f)", cls, auc_val),
+        Comparison = "ovr"
+      )
+    }
+  }
+
+
+  return(results_list)
+
+  # -------------------------
+  # Pairwise
+  # -------------------------
+  if (type == "pairwise") {
+    combs <- combn(classes, 2, simplify = FALSE)
+    for (pair in combs) {
+      cls1 <- pair[1]; cls2 <- pair[2]
+      idx          <- truth %in% c(cls1, cls2)
+      binary_truth <- droplevels(truth[idx])
+      roc_obj <- pROC::roc(
+        response  = binary_truth,
+        predictor = probs[idx, cls2],
+        levels    = c(cls1, cls2),
+        quiet     = TRUE
+      )
+      auc_val          <- as.numeric(pROC::auc(roc_obj))
+      comparison_name  <- paste(cls1, "vs", cls2)
+      aucs[comparison_name] <- auc_val
+      results_list[[comparison_name]] <- data.frame(
+        FPR        = 1 - roc_obj$specificities,
+        TPR        = roc_obj$sensitivities,
+        Class      = sprintf("%s (AUC = %.3f)", comparison_name, auc_val),
+        Comparison = "pairwise"
+      )
+    }
+  }
+
+  roc_df <- do.call(rbind, results_list)
+  rownames(roc_df) <- NULL
 }
 
 
@@ -497,7 +569,7 @@ compute_ablation.caret_stack <- function(
     training_data[[remove_model]] <- NULL
 
     oof_pred <- .get_oof_preds(ensemble_model, aggregate_resamples = TRUE)
-    oof_pred <- .drop_excluded_class(oof_pred, all_classes = ensemble_model$levels, excluded_class_id = 1L)
+    #TODO test this
     oof_pred <- as.numeric(oof_pred[[1]])
 
 

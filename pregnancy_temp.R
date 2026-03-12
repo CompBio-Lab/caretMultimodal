@@ -13,7 +13,7 @@ featureweeks <- featureweeks[-postpartum_indices]
 
 alphas <- seq(0, 1, 0.1)
 lambdas <- seq(0, 12, by = 0.5)
-tuneGrid <- expand.grid(alpha = alphas, lambda = lambdas)
+tuneGrid <- expand.grid(alpha = c(0,1), lambda = 1) # Changes for speed
 
 # Set up trControl for leave-one-sample-out cross-validation
 

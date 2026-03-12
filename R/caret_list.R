@@ -129,15 +129,14 @@ caret_list <- function(
 #' @description This always return probabilities for classification models, with the option to drop one predicted class.
 #' @param object A `caret_list` object
 #' @param data_list A list of datasets to predict on, with each dataset matching the corresponding model in `caret_list`.
-#' @param excluded_class_id An integer indicating the class index to exclude from prediction output.
-#' If `NULL`, no class is excluded. Default is 1L.
+#' @param drop_redundant_class A boolean controlling whether to exclude the first class level from prediction output. Default is `TRUE`.
 #' @param ... Additional arguments to pass to `caret::predict`
 #' @return A `data.table::data.table` of predictions
 #' @export
 predict.caret_list <- function(
     object,
     data_list,
-    excluded_class_id = 1L,
+    drop_redundant_class = TRUE,
     ...) {
 
   caret_list <- object
@@ -170,8 +169,8 @@ predict.caret_list <- function(
       ...
     )
 
-    if (!is.null(excluded_class_id)) {
-      pred <- .drop_excluded_class(pred, all_classes = model$levels, excluded_class_id)
+    if (is_classifier && drop_redundant_class) {
+      pred <- pred[ ,-1]
     }
 
     pred
@@ -191,8 +190,7 @@ predict.caret_list <- function(
 #'   across resamples to produce a single prediction per training instance.
 #'   TODO touch up description
 #' @param object A `caret_list` object
-#' @param excluded_class_id An integer indicating the class index to exclude from prediction output.
-#' If `NONE`, no class is excluded. Default is 1L.
+#' @param drop_redundant_class A boolean controlling whether to exclude the first class level from prediction output. Default is `TRUE`.
 #' @param aggregate_resamples Logical, whether to aggregate resamples across folds.
 #' @param intersection_only Logical, whether to trim down the out of fold predictions to only the intersection of
 #' samples that have data in all datasets.
@@ -201,7 +199,7 @@ predict.caret_list <- function(
 #' @export
 oof_predictions.caret_list <- function(
     object,
-    excluded_class_id = 1L,
+    drop_redundant_class = TRUE,
     aggregate_resamples = TRUE,
     intersection_only = TRUE,
     ...) {
@@ -227,8 +225,8 @@ oof_predictions.caret_list <- function(
 
     pred <- .get_oof_preds(model, aggregate_resamples)
 
-    if (!is.null(excluded_class_id)) {
-      pred <- .drop_excluded_class(pred, all_classes = model$levels, excluded_class_id)
+    if (is_classifier && drop_redundant_class) {
+      pred <- pred[ ,-1]
     }
 
     pred

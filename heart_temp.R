@@ -9,26 +9,31 @@ tuneGrid <- expand.grid(alpha = alphas, lambda = lambdas)
 
 ####### TEMP Identifer Column Ad Hoc testing
 
-n <- nrow(cells)
+# n <- nrow(cells)
+#
+# cells$id    <- seq_len(n)
+# holter$id   <- seq_len(n)
+# mrna$id     <- seq_len(n)
+# proteins$id <- seq_len(n)
+# demo$id     <- seq_len(n)
 
-cells$id    <- seq_len(n)
-holter$id   <- seq_len(n)
-mrna$id     <- seq_len(n)
-proteins$id <- seq_len(n)
-demo$id     <- seq_len(n)
+n <- nrow(demo)
 
+multiclass_vec <- factor(
+  sample(c("class1", "class2", "class3"), size = n, replace = TRUE),
+  levels = c("class1", "class2", "class3")
+)
 
 # Train the base models
 
 heart_models <- caretMultimodal::caret_list(
-  target = demo[, c("id", "hospitalizations")],
+  target = multiclass_vec,
   data_list = list(
     cells = cells,
     holter = holter,
-    mrna = mrna[-seq_len(2), ],
+    mrna = mrna,
     proteins = proteins
   ),
-  identifier_column_name = "id",
   method = "glmnet",
   tuneGrid = tuneGrid
 )

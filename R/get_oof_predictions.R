@@ -41,25 +41,6 @@
   pred
 }
 
-#' @title Drop Excluded Class
-#' @description Drop the excluded class from a prediction data.table
-#' @param pred a data.table of predictions
-#' @param all_classes a character vector of all classes
-#' @param excluded_class_id an integer indicating the class to exclude
-#' @return pred with the excluded_class_id column dropped
-#' @noRd
-.drop_excluded_class <- function(pred, all_classes, excluded_class_id) {
-
-  pred <- data.table::as.data.table(pred)
-  if (length(all_classes) > 1L) {
-    excluded_class <- all_classes[excluded_class_id]
-    classes_included <- setdiff(names(pred), excluded_class)
-    pred <- pred[, ..classes_included, drop = FALSE, with = FALSE]
-  }
-
-  pred
-}
-
 #' @title Aggregate vector
 #' @description Aggregate a vector depending on its type.
 #' For numeric data return the mean.
@@ -74,4 +55,5 @@
     names(sort(table(x), decreasing = TRUE))[1L]
   }
 }
+
 
