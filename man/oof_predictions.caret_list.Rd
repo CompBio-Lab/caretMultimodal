@@ -22,7 +22,7 @@
 \item{intersection_only}{Logical, whether to trim down the out of fold predictions to only the intersection of
 samples that have data in all datasets.}
 
-\item{...}{Additional arguments}
+\item{...}{Not used. Included for S3 compatibility.}
 }
 \value{
 A \code{data.table::data.table} of OOF predictions

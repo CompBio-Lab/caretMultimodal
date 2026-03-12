@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{a \code{caret_list} object}
 
-\item{...}{Additional arguments}
+\item{...}{Not used. Included for S3 compatibility.}
 }
 \value{
 A \code{data.table} with tunes and metrics from each model.

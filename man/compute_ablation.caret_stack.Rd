@@ -7,6 +7,8 @@
 \method{compute_ablation}{caret_stack}(object, metric_function, metric_name, reverse = FALSE, ...)
 }
 \arguments{
+\item{object}{A \code{caret_stack} object.}
+
 \item{metric_function}{A function that takes two arguments \verb{(predictions, target)}
 and returns a single numeric value representing the metric to compute (e.g., RMSE, accuracy, AUC).}
 
@@ -14,6 +16,8 @@ and returns a single numeric value representing the metric to compute (e.g., RMS
 
 \item{reverse}{The direction to ablate in. If \code{FALSE}, the lowest contributing model is removed at each iteration.
 If \code{TRUE}, the highest contributing model is removed. Default is \code{FALSE}.}
+
+\item{...}{Not used. Included for S3 compatibility.}
 }
 \value{
 A \code{data.table}

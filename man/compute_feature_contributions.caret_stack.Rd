@@ -4,13 +4,15 @@
 \alias{compute_feature_contributions.caret_stack}
 \title{Compute the feature level contributions for a caret_stack model.}
 \usage{
-\method{compute_feature_contributions}{caret_stack}(object, n_features = 20)
+\method{compute_feature_contributions}{caret_stack}(object, n_features = 20, ...)
 }
 \arguments{
 \item{object}{A \code{caret_stack} object.}
 
 \item{n_features}{The maximum number of features to include. Setting to a very
 large value will include all features. Default is 20.}
+
+\item{...}{Not used. Included for S3 compatibility.}
 }
 \value{
 A \code{data.table}

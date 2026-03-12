@@ -16,7 +16,7 @@ and returns a single numeric value representing the metric to compute (e.g., RMS
 
 \item{descending}{Whether to sort in descending order. If \code{FALSE}, the output is sorted in ascending order. Default is \code{TRUE}.}
 
-\item{...}{Additional arguments}
+\item{...}{Not used. Included for S3 compatibility.}
 }
 \value{
 A \code{ggplot2} bar chart

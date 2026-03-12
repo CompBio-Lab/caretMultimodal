@@ -18,7 +18,7 @@
 
 \item{aggregate_resamples}{Logical, whether to aggregate resamples across folds. Default is \code{TRUE}.}
 
-\item{...}{Additional arguments}
+\item{...}{Not used. Included for S3 compatibility.}
 }
 \value{
 A \code{data.table::data.table} of OOF predictions

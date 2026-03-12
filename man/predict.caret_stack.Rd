@@ -13,7 +13,7 @@
 
 \item{drop_redundant_class}{A boolean controlling whether to exclude the first class from prediction output. Default is \code{TRUE}.}
 
-\item{...}{Additional arguments}
+\item{...}{Additional arguments to pass to \code{caret::predict}.}
 }
 \value{
 A \code{data.table::data.table} of predictions for base and ensemble models.

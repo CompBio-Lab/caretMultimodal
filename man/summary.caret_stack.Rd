@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{A \code{caret_stack} object}
 
-\item{...}{Additional arguments}
+\item{...}{Not used. Included for S3 compatibility.}
 }
 \value{
 A \code{data.table} of methods, tuning parameters and performance metrics for the base and ensemble model

@@ -4,13 +4,15 @@
 \alias{plot_feature_contributions.caret_stack}
 \title{Plot the feature level contributions to a stacked model}
 \usage{
-\method{plot_feature_contributions}{caret_stack}(object, n_features = 20)
+\method{plot_feature_contributions}{caret_stack}(object, n_features = 20, ...)
 }
 \arguments{
 \item{object}{A \code{caret_stack} object.}
 
 \item{n_features}{The maximum number of features to include. Setting to a very
 large value will include all features. Default is 20.}
+
+\item{...}{Not used. Included for S3 compatibility.}
 }
 \value{
 A \code{ggplot2} bar plot

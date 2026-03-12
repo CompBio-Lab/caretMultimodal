@@ -41,7 +41,7 @@ If \code{NULL}, a default metric will be constructed depending on the target typ
 
 \item{do_parallel}{Logical, whether to parallelize model training across datasets. Default is \code{TRUE}}
 
-\item{...}{Any additional arguments to pass to the \code{caret::train} function}
+\item{...}{Additional arguments to pass to the \code{caret::train} function}
 }
 \value{
 A \code{caret_list} object, which is a list of \code{caret::train} model corresponding to \code{data_list}.

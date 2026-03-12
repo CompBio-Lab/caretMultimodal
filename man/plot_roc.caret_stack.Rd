@@ -11,7 +11,7 @@
 
 \item{include_auc}{Whether to include AUC values in the legend. Default is \code{True}.}
 
-\item{...}{Additional arguments}
+\item{...}{Not used. Included for S3 compatibility.}
 }
 \value{
 A \code{ggplot2} object

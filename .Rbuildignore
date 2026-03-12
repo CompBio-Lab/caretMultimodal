@@ -3,3 +3,5 @@
 ^\.github$
 ^LICENSE\.md$
 ^res$
+^examples$
+^plots$

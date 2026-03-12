@@ -18,7 +18,7 @@
 #' If `NULL`, a default metric will be constructed depending on the target type.
 #' @param trim Logical, whether the train models be trimmed to save memory. Default is `TRUE`
 #' @param do_parallel Logical, whether to parallelize model training across datasets. Default is `TRUE`
-#' @param ... Any additional arguments to pass to the `caret::train` function
+#' @param ... Additional arguments to pass to the `caret::train` function
 #' @return A `caret_list` object, which is a list of `caret::train` model corresponding to `data_list`.
 #' @export
 caret_list <- function(
@@ -199,7 +199,7 @@ predict.caret_list <- function(
 #' @param aggregate_resamples Logical, whether to aggregate resamples across folds.
 #' @param intersection_only Logical, whether to trim down the out of fold predictions to only the intersection of
 #' samples that have data in all datasets.
-#' @param ... Additional arguments
+#' @param ... Not used. Included for S3 compatibility.
 #' @return A `data.table::data.table` of OOF predictions
 #' @export
 oof_predictions.caret_list <- function(
@@ -267,7 +267,7 @@ oof_predictions.caret_list <- function(
 
 #' @title Provide a summary of the best tuning parameters and resampling metrics for all the `caret_list` models.
 #' @param object a `caret_list` object
-#' @param ... Additional arguments
+#' @param ... Not used. Included for S3 compatibility.
 #' @return A `data.table` with tunes and metrics from each model.
 #' @export
 summary.caret_list <- function (object, ...) {
