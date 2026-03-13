@@ -22,6 +22,12 @@ which is used for stacking multiple models on a single dataset.
   <img src="res/late_fusion.png" />
 </div>
 
+## Project Status
+
+⚠️ **Work in Progress**
+
+`caretMultimodal` is currently under active development. The API, functionality, and documentation may change as features are refined.
+
 ## Key Features
 
 - Includes all the functionality of **caret**, giving users full control over sampling strategies, training methods, hyperparameter tuning, and more  
