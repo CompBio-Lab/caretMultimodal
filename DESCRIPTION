@@ -1,9 +1,14 @@
 Package: caretMultimodal
 Title: Multimodal Late Fusion in R
-Version: 0.0.0.9000
+Version: 1.0
 Authors@R: 
     person("Josh", "Dyce", , "jpdyce@gmail.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+    person("Amrit", "Singh", role = c("aut"))
+Description: `caretMultimodal` extends the `caret` framework to support late fusion workflows in R,
+    enabling users to train models independently across multiple data modalities and combine their
+    predictions into a single meta-model. Designed for R developers, data scientists, and 
+    biomedical researchers alike, `caretMultimodal` aims to make late fusion ensemble modelling
+    as accessible and flexible as single-modality workflows in `caret`.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -21,5 +26,5 @@ Imports:
     foreach,
     viridis
 Config/testthat/edition: 3
-URL: https://github.com/JoshD898/caretMultimodal, https://compbio-lab.github.io/caretMultimodal/
-BugReports: https://github.com/JoshD898/caretMultimodal/issues
+URL: https://github.com/CompBio-Lab/caretMultimodal, https://compbio-lab.github.io/caretMultimodal/
+BugReports: https://github.com/CompBio-Lab/caretMultimodal/issues
