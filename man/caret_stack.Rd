@@ -20,7 +20,7 @@ caret_stack(
 \item{method}{The method to train the ensemble model. Can be a custom method or one found in \code{caret::modelLookup()}.}
 
 \item{data_list}{A list of datasets to predict on, with each dataset matching the corresponding model in \code{caret_list}.
-If \code{NULL}, the out-of-fold predictions from the base models will be used.}
+If \code{NULL}, the out-of-fold predictions from the base models will be used. Default is \code{NULL}.}
 
 \item{target}{Target parameter vector that must be provided if predicting on a new data list.
 If \code{NULL}, the target vector used to train the base models will be used.}

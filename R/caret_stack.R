@@ -10,7 +10,7 @@
 #' @param caret_list a `caret_list` object
 #' @param method The method to train the ensemble model. Can be a custom method or one found in `caret::modelLookup()`.
 #' @param data_list A list of datasets to predict on, with each dataset matching the corresponding model in `caret_list`.
-#' If `NULL`, the out-of-fold predictions from the base models will be used.
+#' If `NULL`, the out-of-fold predictions from the base models will be used. Default is `NULL`.
 #' @param target Target parameter vector that must be provided if predicting on a new data list.
 #' If `NULL`, the target vector used to train the base models will be used.
 #' @param metric Metric for use with `caret::train` function.

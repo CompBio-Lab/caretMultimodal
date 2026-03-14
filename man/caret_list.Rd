@@ -17,37 +17,61 @@ caret_list(
 )
 }
 \arguments{
-\item{target}{Target parameter vector, either numeric for regression or a factor/character for classification.}
+\item{target}{Target vector, either numeric for regression or a factor/character for classification.}
 
-\item{data_list}{A list of data sets to train models on}
+\item{data_list}{A named list of matrix-like objects, where each element is a dataset to train a separate model on.
+Names are preserved in the returned \code{caret_list} and should be unique.}
 
 \item{method}{The method to train the models with. Can be a custom method or one found in \code{caret::modelLookup()}.}
 
-\item{identifier_column_name}{The name of a column that connects the rows in the dataset (ex. a participant ID).
-If provided, this column must be present in all datasets within the \code{data_list} for proper matching.
-Use this if the datasets have different numbers of rows.
+\item{identifier_column_name}{A string giving the name of a column that links rows across datasets (e.g. a participant ID).
+If provided, this column must be present in all datasets in \code{data_list} for proper row matching.
+Use this when datasets have different numbers of rows.
+If \code{NULL}, datasets are assumed to have identical rows in the same order. Default is \code{NULL}.
 
-Currently, providing \code{identifier_column_name} disables support for custom \code{trControl}, because a new
+\strong{Note:} Providing \code{identifier_column_name} disables support for custom \code{trControl}. A new
 resampling scheme must be constructed for each dataset after row matching, which may invalidate
 user-supplied fold indices.}
 
-\item{trControl}{Control for use with the \code{caret::train} function.
-If \code{NULL}, a default control will be constructed depending on the target type.}
+\item{trControl}{Control for use with the \code{caret::train} function. If \code{NULL}, \code{.default_control()} is used
+to construct a default control (5-fold cross validation) depending on the target type. Default is \code{NULL}.}
 
-\item{metric}{Metric for use with \code{caret::train} function.
-If \code{NULL}, a default metric will be constructed depending on the target type.}
+\item{metric}{Metric for use with \code{caret::train} function. If \code{NULL}, \code{.default_metric()} is used
+to construct a default metric depending on the target type. Default is \code{NULL}.}
 
-\item{trim}{Logical, whether the train models be trimmed to save memory. Default is \code{TRUE}}
+\item{trim}{Logical, whether the trained models should be trimmed to save memory. Default is \code{TRUE}.}
 
-\item{do_parallel}{Logical, whether to parallelize model training across datasets. Default is \code{TRUE}}
+\item{do_parallel}{Logical, whether to parallelize model training across datasets. Default is \code{TRUE}.}
 
-\item{...}{Additional arguments to pass to the \code{caret::train} function}
+\item{...}{Additional arguments to pass to the \code{caret::train} function (e.g. \code{tuneGrid = tuneGrid}).}
 }
 \value{
-A \code{caret_list} object, which is a list of \code{caret::train} model corresponding to \code{data_list}.
+A \code{caret_list} object (a named list of trained \code{caret::train} models corresponding to \code{data_list}).
 }
 \description{
-Build a list of \code{caret::train} objects, where each model corresponds to a data set in \code{data_list}.
-The resulting list is structured for use in ensembling workflows. Users can specify the training method, control parameters,
-and metrics, and the function supports error handling and model trimming for efficiency.
+Builds a list of \code{caret::train} objects, where each model corresponds to a data set in \code{data_list}.
+The resulting list is used as input to \code{\link[=caret_stack]{caret_stack()}} to construct a meta model.
+}
+\examples{
+set.seed(42)
+
+# Generate fake datasets and target vector
+n <- 100
+target <- factor(sample(c("yes", "no"), n, replace = TRUE))
+data_list <- list(
+  modality1 = data.frame(a = rnorm(n), b = rnorm(n)),
+  modality2 = data.frame(c = rnorm(n), d = rnorm(n)),
+  modality3 = data.frame(e = rnorm(n), f = rnorm(n))
+)
+
+# Define hyperparameters to tune (optional)
+tuneGrid <- expand.grid(alpha = c(0, 0.5, 1), lambda = c(0.01, 0.1))
+
+# Train models with a tuning grid
+base_models <- caret_list(
+  target = target,
+  data_list = data_list,
+  method = "glmnet",
+  tuneGrid = tuneGrid
+)
 }
