@@ -2,3 +2,32 @@ url: https://compbio-lab.github.io/caretMultimodal/
 template:
   bootstrap: 5
 
+reference:
+  - title: Constructor and methods for `caret_list` objects
+    contents:
+      - caret_list
+      - predict.caret_list
+      - oof_predictions.caret_list
+      - summary.caret_list
+
+  - title: Constructor and methods for `caret_stack` objects
+    contents:
+      - caret_stack
+      - predict.caret_stack
+      - oof_predictions.caret_stack
+      - summary.caret_stack
+      - plot_roc.caret_stack
+      - compute_metric.caret_stack
+      - plot_metric.caret_stack
+      - compute_model_contributions.caret_stack
+      - plot_model_contributions.caret_stack
+      - compute_ablation.caret_stack
+      - plot_ablation.caret_stack
+      - compute_feature_contributions.caret_stack
+      - plot_feature_contributions.caret_stack
+
+  - title: Miscellaneous Helper Functions
+    contents:
+      - prepare_mae
+      - load_gestational_age
+      - load_heart_failure
