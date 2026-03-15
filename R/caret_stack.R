@@ -490,6 +490,9 @@ compute_ablation.caret_stack <- function(
   metric <- ensemble$metric
   trControl <- ensemble$control
 
+  # This may slow things down, but otherwise this method throws errors if the cluster has been closed
+  trControl$allowParallel <- FALSE
+
   target <- ensemble$trainingData$.outcome
   training_data <- subset(oof_predictions.caret_stack(caret_stack), select = -ensemble)
 
@@ -506,6 +509,7 @@ compute_ablation.caret_stack <- function(
 
     imp <- scaled_varImp(ensemble_model)
     remove_model <- if (reverse) imp[which.max(`Relative Contribution`), Model] else imp[which.min(`Relative Contribution`), Model]
+    print(remove_model)
     training_data[[remove_model]] <- NULL
 
     oof_pred <- .get_oof_preds(ensemble_model, aggregate_resamples = TRUE)
@@ -517,6 +521,8 @@ compute_ablation.caret_stack <- function(
     new_col <- c(imp[match(results$Row, imp$Model), `Relative Contribution`])
     new_col[length(new_col)] <- metric_val
     results[[paste0("Ablation_", ncol(results))]] <- new_col
+
+    print(results)
   }
 
   results

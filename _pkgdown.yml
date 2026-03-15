@@ -3,14 +3,14 @@ template:
   bootstrap: 5
 
 reference:
-  - title: Constructor and methods for `caret_list` objects
+  - title: Constructor and methods for `caret_list`
     contents:
       - caret_list
       - predict.caret_list
       - oof_predictions.caret_list
       - summary.caret_list
 
-  - title: Constructor and methods for `caret_stack` objects
+  - title: Constructor and methods for `caret_stack`
     contents:
       - caret_stack
       - predict.caret_stack
