@@ -8,20 +8,23 @@
 A named list with 5 elements:
 \describe{
 \item{demo}{A \code{data.frame} of demographic features}
-\item{cells}{A \code{data.frame} of cell features}
-\item{holter}{A \code{data.frame} of Holter monitor features}
-\item{mrna}{A \code{data.frame} of mRNA features}
-\item{proteins}{A \code{data.frame} of protein features}
+\item{cells}{A \code{data.frame} of cell count features}
+\item{holter}{A \code{data.frame} of Holter monitor (ECG) features}
+\item{mrna}{A \code{data.frame} of mRNA expression features}
+\item{proteins}{A \code{data.frame} of protein abundance features}
 }
 }
 \source{
 Singh et al. Ensembling Electrical and Proteogenomics Biomarkers for Improved
-Prediction of Cardiac-Related 3-Month Hospitalizations: A Pilot Study. Can J Cardiol. 2019 Apr
+Prediction of Cardiac-Related 3-Month Hospitalizations: A Pilot Study.
+\emph{Can J Cardiol.} 2019 Apr. \doi{10.1016/j.cjca.2018.11.021}
 }
 \usage{
 heart_failure_datasets
 }
 \description{
-This is a sample description I will fix later
+A multimodal dataset from Singh et al. (2019) containing demographic, cellular,
+electrophysiological, and molecular features for predicting cardiac-related
+hospitalizations. Used in examples throughout the caretMultimodal package.
 }
 \keyword{datasets}

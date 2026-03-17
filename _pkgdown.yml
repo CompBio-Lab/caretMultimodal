@@ -34,3 +34,4 @@ reference:
   - title: Datasets
     contents:
       - heart_failure_datasets
+      - heart_failure_stack

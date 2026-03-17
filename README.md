@@ -43,5 +43,5 @@ devtools::install_github("CompBio-Lab/caretMultimodal")
 
 ## Acknowledgements
 
-The project structure is inspired by Zach Mayer's [caretEnsemble](https://github.com/zachmayer/caretEnsemble) package, 
+The project structure is inspired by Zach Mayer's [`caretEnsemble`](https://github.com/zachmayer/caretEnsemble) package, 
 which is used for stacking multiple models on a single dataset.
