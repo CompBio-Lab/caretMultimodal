@@ -30,3 +30,12 @@ plot_model_contributions(object, descending = TRUE, ...)
 ## Value
 
 A `ggplot2` bar chart
+
+## Examples
+
+``` r
+# Load pre-trained example caret_stack object
+data(heart_failure_stack)
+
+plot_model_contributions(heart_failure_stack)
+```

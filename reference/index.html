@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">caretMultimodal</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,7 +18,7 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/JoshD898/caretMultimodal/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/CompBio-Lab/caretMultimodal/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -31,7 +31,7 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="constructor-and-methods-for-caret-list-">Constructor and methods for <code>caret_list</code><a class="anchor" aria-label="anchor" href="#constructor-and-methods-for-caret-list-"></a></h2>
 
 
 
@@ -45,112 +45,44 @@
           <code><a href="caret_list.html">caret_list()</a></code>
 
         </dt>
-        <dd>Create a <code>caret_list</code> object</dd>
-
-        <dt>
-
-          <code><a href="caret_stack.html">caret_stack()</a></code>
-
-        </dt>
-        <dd>Ensemble the models of a <code>caret_list</code> object</dd>
-
-        <dt>
-
-          <code><a href="compute_ablation.caret_stack.html">compute_ablation(<i>&lt;caret_stack&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Perform an ablation analysis for a caret_stack model.</dd>
-
-        <dt>
-
-          <code><a href="compute_feature_contributions.caret_stack.html">compute_feature_contributions(<i>&lt;caret_stack&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Compute the feature level contributions for a caret_stack model.</dd>
-
-        <dt>
-
-          <code><a href="compute_metric.caret_stack.html">compute_metric(<i>&lt;caret_stack&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Compute metrics with a provided metric function</dd>
-
-        <dt>
-
-          <code><a href="compute_model_contributions.caret_stack.html">compute_model_contributions(<i>&lt;caret_stack&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Compute the relative contributions of each of the base models in the ensemble model</dd>
-
-        <dt>
-
-          <code><a href="load_gestational_age.html">load_gestational_age()</a></code>
-
-        </dt>
-        <dd>Load the example gestational age datasets</dd>
-
-        <dt>
-
-          <code><a href="load_heart_failure.html">load_heart_failure()</a></code>
-
-        </dt>
-        <dd>Load the example heart failure datasets</dd>
-
-        <dt>
-
-          <code><a href="oof_predictions.caret_list.html">oof_predictions(<i>&lt;caret_list&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Out-of-fold predictions from a caret_list</dd>
-
-        <dt>
-
-          <code><a href="oof_predictions.caret_stack.html">oof_predictions(<i>&lt;caret_stack&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Out-of-fold predictions from a caret_stack</dd>
-
-        <dt>
-
-          <code><a href="plot_ablation.caret_stack.html">plot_ablation(<i>&lt;caret_stack&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Plot the results of an ablation analysis for a caret_stack model.</dd>
-
-        <dt>
-
-          <code><a href="plot_feature_contributions.caret_stack.html">plot_feature_contributions(<i>&lt;caret_stack&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Plot the feature level contributions to a stacked model</dd>
-
-        <dt>
-
-          <code><a href="plot_metric.caret_stack.html">plot_metric(<i>&lt;caret_stack&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Plot metrics computed with a provided metric function</dd>
-
-        <dt>
-
-          <code><a href="plot_model_contributions.caret_stack.html">plot_model_contributions(<i>&lt;caret_stack&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Plot the relative contributions of each of the base models in the ensemble model</dd>
-
-        <dt>
-
-          <code><a href="plot_roc.caret_stack.html">plot_roc(<i>&lt;caret_stack&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Plot ROC curves for individual and ensemble models in a caret_stack</dd>
+        <dd>Construct a <code>caret_list</code> object</dd>
 
         <dt>
 
           <code><a href="predict.caret_list.html">predict(<i>&lt;caret_list&gt;</i>)</a></code>
 
         </dt>
-        <dd>Create a matrix of predictions for each model in a caret_list</dd>
+        <dd>Predict from a <code>caret_list</code></dd>
+
+        <dt>
+
+          <code><a href="oof_predictions.caret_list.html">oof_predictions(<i>&lt;caret_list&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Out-of-fold predictions from a <code>caret_list</code></dd>
+
+        <dt>
+
+          <code><a href="summary.caret_list.html">summary(<i>&lt;caret_list&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Provide a summary of the best tuning parameters and resampling metrics for all the <code>caret_list</code> models.</dd>
+      </dl></div><div class="section level2">
+      <h2 id="constructor-and-methods-for-caret-stack-">Constructor and methods for <code>caret_stack</code><a class="anchor" aria-label="anchor" href="#constructor-and-methods-for-caret-stack-"></a></h2>
+
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="caret_stack.html">caret_stack()</a></code>
+
+        </dt>
+        <dd>Construct a <code>caret_stack</code> object.</dd>
 
         <dt>
 
@@ -161,17 +93,10 @@
 
         <dt>
 
-          <code><a href="prepare_mae.html">prepare_mae()</a></code>
+          <code><a href="oof_predictions.caret_stack.html">oof_predictions(<i>&lt;caret_stack&gt;</i>)</a></code>
 
         </dt>
-        <dd>Prepare a MultiAssayExperiment for use with caretMultimodal</dd>
-
-        <dt>
-
-          <code><a href="summary.caret_list.html">summary(<i>&lt;caret_list&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Provide a summary of the best tuning parameters and resampling metrics for all the <code>caret_list</code> models.</dd>
+        <dd>Out-of-fold predictions from a caret_stack</dd>
 
         <dt>
 
@@ -179,12 +104,115 @@
 
         </dt>
         <dd>Get a summary of a <code>caret_stack</code> object</dd>
+
+        <dt>
+
+          <code><a href="plot_roc.caret_stack.html">plot_roc(<i>&lt;caret_stack&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Plot ROC curves for individual and ensemble models in a caret_stack</dd>
+
+        <dt>
+
+          <code><a href="compute_metric.caret_stack.html">compute_metric(<i>&lt;caret_stack&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Compute metrics with a provided metric function</dd>
+
+        <dt>
+
+          <code><a href="plot_metric.caret_stack.html">plot_metric(<i>&lt;caret_stack&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Plot metrics computed with a provided metric function</dd>
+
+        <dt>
+
+          <code><a href="compute_model_contributions.caret_stack.html">compute_model_contributions(<i>&lt;caret_stack&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Compute the relative contributions of each of the base models in the ensemble model</dd>
+
+        <dt>
+
+          <code><a href="plot_model_contributions.caret_stack.html">plot_model_contributions(<i>&lt;caret_stack&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Plot the relative contributions of each of the base models in the ensemble model</dd>
+
+        <dt>
+
+          <code><a href="compute_ablation.caret_stack.html">compute_ablation(<i>&lt;caret_stack&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Perform an ablation analysis for a caret_stack model.</dd>
+
+        <dt>
+
+          <code><a href="plot_ablation.caret_stack.html">plot_ablation(<i>&lt;caret_stack&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Plot the results of an ablation analysis for a caret_stack model.</dd>
+
+        <dt>
+
+          <code><a href="compute_feature_contributions.caret_stack.html">compute_feature_contributions(<i>&lt;caret_stack&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Compute the feature level contributions for a caret_stack model.</dd>
+
+        <dt>
+
+          <code><a href="plot_feature_contributions.caret_stack.html">plot_feature_contributions(<i>&lt;caret_stack&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Plot the feature level contributions to a stacked model</dd>
+      </dl></div><div class="section level2">
+      <h2 id="miscellaneous-helper-functions">Miscellaneous Helper Functions<a class="anchor" aria-label="anchor" href="#miscellaneous-helper-functions"></a></h2>
+
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="prepare_mae.html">prepare_mae()</a></code>
+
+        </dt>
+        <dd>Prepare a MultiAssayExperiment for use with caretMultimodal</dd>
+      </dl></div><div class="section level2">
+      <h2 id="datasets">Datasets<a class="anchor" aria-label="anchor" href="#datasets"></a></h2>
+
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="heart_failure_datasets.html">heart_failure_datasets</a></code>
+
+        </dt>
+        <dd>Heart Failure Datasets</dd>
+
+        <dt>
+
+          <code><a href="heart_failure_stack.html">heart_failure_stack</a></code>
+
+        </dt>
+        <dd>Pre-trained <code>caret_stack</code> on Heart Failure Datasets</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Josh Dyce.</p>
+  <p>Developed by Josh Dyce, Amrit Singh.</p>
 </div>
 
 <div class="pkgdown-footer-right">

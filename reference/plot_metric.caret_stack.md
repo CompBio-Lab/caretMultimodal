@@ -38,3 +38,19 @@ plot_metric(object, metric_function, metric_name, descending = TRUE, ...)
 ## Value
 
 A `ggplot2` bar chart
+
+## Examples
+
+``` r
+# Load pre-trained example caret_stack object
+data(heart_failure_stack)
+
+# Since the example stack is a binary classifier,
+# this metric function needs to take in predictions (floats) and
+# ground truth (binary vector), and produce a single number.
+metric_fun <- function(preds, target) {
+  pROC::roc(response = target, predictor = preds, quiet = TRUE)$auc
+}
+
+plot_metric(heart_failure_stack, metric_fun, "AUC")
+```

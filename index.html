@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Multimodal Late Fusion in R">
-<meta name="description" content="What the package does (one paragraph).">
-<meta property="og:description" content="What the package does (one paragraph).">
+<meta name="description" content="`caretMultimodal` extends the `caret` framework to support late fusion workflows in R, enabling users to train models independently across multiple data modalities and combine their predictions into a single meta-model. Designed for R developers, data scientists, and biomedical researchers alike, `caretMultimodal` aims to make late fusion ensemble modelling as accessible and flexible as single-dataset workflows in `caret`.">
+<meta property="og:description" content="`caretMultimodal` extends the `caret` framework to support late fusion workflows in R, enabling users to train models independently across multiple data modalities and combine their predictions into a single meta-model. Designed for R developers, data scientists, and biomedical researchers alike, `caretMultimodal` aims to make late fusion ensemble modelling as accessible and flexible as single-dataset workflows in `caret`.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">caretMultimodal</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +37,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/JoshD898/caretMultimodal/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/CompBio-Lab/caretMultimodal/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -50,25 +50,14 @@
 <div class="section level1">
 <div class="page-header"><h1 id="caretmultimodal">caretMultimodal<a class="anchor" aria-label="anchor" href="#caretmultimodal"></a>
 </h1></div>
-<p><strong>caretMultimodal</strong> builds on the <a href="https://github.com/topepo/caret" class="external-link">caret</a> package to make it easy to train, combine, and interpret models from multiple datasets or modalities. The package implements a data integration technique called <strong>late fusion</strong>, where base models are trained independently on each dataset, and their predictions are then aggregated using an ensemble model.</p>
-<p>This work is inspired by Zach Mayer’s <a href="https://github.com/zachmayer/caretEnsemble" class="external-link">caretEnsemble</a> package, which is used for stacking multiple models on a single dataset.</p>
-<div style="text-align: center;">
-<p>
-<strong>Late Fusion Workflow</strong>
-</p>
-<p><img src="res/late_fusion.png"></p>
-</div>
-<div class="section level2">
-<h2 id="project-status">Project Status<a class="anchor" aria-label="anchor" href="#project-status"></a>
-</h2>
-<p>⚠️ <strong>Work in Progress</strong></p>
-<p><code>caretMultimodal</code> is currently under active development. The API, functionality, and documentation may change as features are refined.</p>
-</div>
+<p><code>caretMultimodal</code> extends the <a href="https://github.com/topepo/caret" class="external-link"><code>caret</code></a> framework to support late fusion workflows in R, enabling users to train models independently across multiple data modalities and combine their predictions into a single meta-model. Designed for R developers, data scientists, and biomedical researchers, <code>caretMultimodal</code> makes late fusion ensemble modelling as accessible and flexible as single-dataset workflows in <code>caret</code>.</p>
+<p><strong>Example late fusion workflow using cross-validation</strong></p>
+<p><img src="reference/figures/CV_workflow.png" width="700" alt="caretMultimodal cross-validation workflow"></p>
 <div class="section level2">
 <h2 id="key-features">Key Features<a class="anchor" aria-label="anchor" href="#key-features"></a>
 </h2>
 <ul>
-<li>Includes all the functionality of <strong>caret</strong>, giving users full control over sampling strategies, training methods, hyperparameter tuning, and more<br>
+<li>Includes all the functionality of <code>caret</code>, giving users full control over sampling strategies, training methods, hyperparameter tuning, and more<br>
 </li>
 <li>Default cross-validation structure with careful handling to prevent data leakage across modalities<br>
 </li>
@@ -84,6 +73,11 @@
 </ul>
 </div>
 <div class="section level2">
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+</h2>
+<p>Full API documentation is available at <a href="https://compbio-lab.github.io/caretMultimodal">compbio-lab.github.io/caretMultimodal</a></p>
+</div>
+<div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>The package can be installed using devtools</p>
@@ -91,137 +85,17 @@
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"CompBio-Lab/caretMultimodal"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="classification-example">Classification Example<a class="anchor" aria-label="anchor" href="#classification-example"></a>
+<h2 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>
 </h2>
-<p>For this classification example, we will use <a href="https://amritsingh.shinyapps.io/omicsBioAnalytics/" class="external-link">these publicly available data sets</a> on heart failure, described in detail <a href="https://pubmed.ncbi.nlm.nih.gov/30935638/" class="external-link">here</a>. The data is included in the package, and can be loaded using <code><a href="reference/load_heart_failure.html">load_heart_failure()</a></code>.</p>
-<p>We are going to use four related datasets (cells, holter, mrna and protein) to predict whether patients will be hospitalized in the 3 months following data collection. This is an example of a binary classification task (Yes/No). We will use the <strong>GLMNET</strong> method to train both the base and ensemble models. For resampling, we will use the package default: 5-fold cross-validation with no repetitions.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123L</span><span class="op">)</span></span>
-<span><span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="reference/load_heart_failure.html">load_heart_failure</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Set up hyperparameter tuning</span></span>
-<span></span>
-<span><span class="va">alphas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.7</span>, <span class="fl">0.775</span>, <span class="fl">0.850</span>, <span class="fl">0.925</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">lambdas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.001</span>, <span class="fl">0.1</span>, by <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span>
-<span><span class="va">tuneGrid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="va">alphas</span>, lambda <span class="op">=</span> <span class="va">lambdas</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Train the base models</span></span>
-<span></span>
-<span><span class="va">heart_models</span> <span class="op">&lt;-</span> <span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="reference/caret_list.html">caret_list</a></span><span class="op">(</span></span>
-<span>  target <span class="op">=</span> <span class="va">demo</span><span class="op">$</span><span class="va">hospitalizations</span>,</span>
-<span>  data_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    cells <span class="op">=</span> <span class="va">cells</span>,</span>
-<span>    holter <span class="op">=</span> <span class="va">holter</span>,</span>
-<span>    mrna <span class="op">=</span> <span class="va">mrna</span>,</span>
-<span>    proteins <span class="op">=</span> <span class="va">proteins</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  method <span class="op">=</span> <span class="st">"glmnet"</span>,</span>
-<span>  tuneGrid <span class="op">=</span> <span class="va">tuneGrid</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Train the ensemble model</span></span>
-<span></span>
-<span><span class="va">heart_stack</span> <span class="op">&lt;-</span> <span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="reference/caret_stack.html">caret_stack</a></span><span class="op">(</span></span>
-<span>    caret_list <span class="op">=</span> <span class="va">heart_models</span>,</span>
-<span>    method <span class="op">=</span> <span class="st">"glmnet"</span>,</span>
-<span>    tuneGrid <span class="op">=</span> <span class="va">tuneGrid</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> gives the resampling performance metrics for each base model and the ensemble using their best hyperparameter settings.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">heart_stack</span><span class="op">)</span></span>
-<span><span class="co">#&gt;       model method alpha lambda       ROC      Sens       Spec      ROCSD     SensSD    SpecSD</span></span>
-<span><span class="co">#&gt;      &lt;char&gt; &lt;char&gt; &lt;num&gt;  &lt;num&gt;     &lt;num&gt;     &lt;num&gt;      &lt;num&gt;      &lt;num&gt;      &lt;num&gt;     &lt;num&gt;</span></span>
-<span><span class="co">#&gt; 1:    cells glmnet 0.850  0.091 0.7740741 0.9777778 0.00000000 0.14721931 0.04969040 0.0000000</span></span>
-<span><span class="co">#&gt; 2:   holter glmnet 0.850  0.081 0.7851852 1.0000000 0.16666667 0.08842471 0.00000000 0.2357023</span></span>
-<span><span class="co">#&gt; 3:     mrna glmnet 0.925  0.091 0.8111111 0.9777778 0.06666667 0.16789670 0.04969040 0.1490712</span></span>
-<span><span class="co">#&gt; 4: proteins glmnet 0.700  0.001 0.8962963 0.9555556 0.46666667 0.09128709 0.06085806 0.4472136</span></span>
-<span><span class="co">#&gt; 5: ensemble glmnet 0.925  0.071 0.9407407 0.9555556 0.40000000 0.06728112 0.09938080 0.2527625</span></span></code></pre></div>
-<p>There are built in functions to plot ROC curves on out-of-fold predictions, as well as visualize the relative importance of the base models.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">plot_roc</span><span class="op">(</span><span class="va">heart_stack</span><span class="op">)</span></span></code></pre></div>
-<p><img src="res/heart_roc.png"></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">plot_varimp</span><span class="op">(</span><span class="va">heart_stack</span>, descending <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="res/heart_varimp.png"></p>
-</div>
-<div class="section level2">
-<h2 id="regression-example">Regression Example<a class="anchor" aria-label="anchor" href="#regression-example"></a>
-</h2>
-<p>For this regression example, we will use <a href="https://nalab.stanford.edu/multiomics-pregnancy/" class="external-link">these publicly available datasets</a> on gestational age, described in detail <a href="https://doi.org/10.1093/bioinformatics/bty537" class="external-link">here</a>. This data is included in the package, and can be loaded using <code>load_pregnancy()</code>.</p>
-<p>We will use seven datasets to predict gestational age at time of blood sampling. Again, we will use the <code>GLMNET</code> method to train both the base and ensemble models. We will do a bit of preprocessing of the data to remove postpartum samples, and use a custom trControl to implement leave-one-sample-out cross-validation.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123L</span><span class="op">)</span></span>
-<span><span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="reference/load_gestational_age.html">load_gestational_age</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Remove postpartum samples</span></span>
-<span></span>
-<span><span class="va">postpartum_indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">featureweeks</span> <span class="op">&lt;</span> <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="va">InputData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">InputData</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="op">-</span><span class="va">postpartum_indices</span>, <span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">featurepatients</span> <span class="op">&lt;-</span> <span class="va">featurepatients</span><span class="op">[</span><span class="op">-</span><span class="va">postpartum_indices</span><span class="op">]</span></span>
-<span><span class="va">featureweeks</span> <span class="op">&lt;-</span> <span class="va">featureweeks</span><span class="op">[</span><span class="op">-</span><span class="va">postpartum_indices</span><span class="op">]</span></span>
-<span></span>
-<span><span class="co"># Set up hyperparameter tuning</span></span>
-<span></span>
-<span><span class="va">alphas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0.1</span><span class="op">)</span></span>
-<span><span class="va">lambdas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">12</span>, by <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
-<span><span class="va">tuneGrid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="va">alphas</span>, lambda <span class="op">=</span> <span class="va">lambdas</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Set up trControl for leave-one-sample-out cross-validation</span></span>
-<span></span>
-<span><span class="va">loso_folds</span> <span class="op">&lt;-</span> <span class="fu">caret</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/caret/man/createDataPartition.html" class="external-link">groupKFold</a></span><span class="op">(</span><span class="va">featurepatients</span>, k <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">featurepatients</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">trControl</span> <span class="op">&lt;-</span> <span class="fu">caret</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/caret/man/trainControl.html" class="external-link">trainControl</a></span><span class="op">(</span></span>
-<span>  method <span class="op">=</span> <span class="st">"cv"</span>,</span>
-<span>  index <span class="op">=</span> <span class="va">loso_folds</span>,</span>
-<span>  savePredictions <span class="op">=</span> <span class="st">"final"</span>,</span>
-<span>  summaryFunction <span class="op">=</span> <span class="fu">caret</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/caret/man/postResample.html" class="external-link">defaultSummary</a></span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Train the base models</span></span>
-<span></span>
-<span><span class="va">pregnancy_models</span> <span class="op">&lt;-</span> <span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="reference/caret_list.html">caret_list</a></span><span class="op">(</span></span>
-<span>  data_list <span class="op">=</span> <span class="va">InputData</span>,</span>
-<span>  target <span class="op">=</span> <span class="va">featureweeks</span>,</span>
-<span>  method <span class="op">=</span> <span class="st">"glmnet"</span>,</span>
-<span>  tuneGrid <span class="op">=</span> <span class="va">tuneGrid</span>,</span>
-<span>  trControl <span class="op">=</span> <span class="va">trControl</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Train the ensemble model</span></span>
-<span></span>
-<span><span class="va">pregnancy_stack</span> <span class="op">&lt;-</span> <span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="reference/caret_stack.html">caret_stack</a></span><span class="op">(</span></span>
-<span>  <span class="va">pregnancy_models</span>,</span>
-<span>  method <span class="op">=</span> <span class="st">"glmnet"</span>,</span>
-<span>  tuneGrid <span class="op">=</span> <span class="va">tuneGrid</span>,</span>
-<span>  trControl <span class="op">=</span> <span class="va">trControl</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><code>oof_predictions()</code> returns the out-of-fold predictions for the base and ensemble models</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">oof_predictions</span><span class="op">(</span><span class="va">pregnancy_stack</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#&gt;    Cellfree RNA PlasmaLuminex SerumLuminex Microbiome ImmuneSystem Metabolomics PlasmaSomalogic   ensemble</span></span>
-<span><span class="co">#&gt; 1      14.40391    18.1430558    14.932066  15.869220    16.269368    13.410669       11.833937 13.2816177</span></span>
-<span><span class="co">#&gt; 2      14.61495    12.7016107    19.211904  12.621349    18.867984    13.998000       13.150318 15.5780514</span></span>
-<span><span class="co">#&gt; 3      13.59511     7.9551468    14.441999  15.841214    22.322011    12.899592        8.822440 10.1224647</span></span>
-<span><span class="co">#&gt; 4      15.51295    11.0755650    14.557425  10.926614    10.818393    13.248870        8.705712  8.8447452</span></span>
-<span><span class="co">#&gt; 5      14.72063    16.7378848     6.824721  15.941069    12.202590    15.744880       11.568229 11.1975881</span></span>
-<span><span class="co">#&gt;             ...           ...          ...        ...          ...          ...             ...        ...</span></span></code></pre></div>
-<p><code>plot_metric()</code> applies any custom comparison function is put in and plots the results. For example, the plot below shows the −log₁₀(p-value) from a Spearman correlation between each model’s predictions and the observed gestational age.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">plot_metric</span><span class="op">(</span></span>
-<span>  <span class="va">pregnancy_stack</span>,</span>
-<span>  metric_function <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.test.html" class="external-link">cor.test</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span>, method <span class="op">=</span> <span class="st">"spearman"</span><span class="op">)</span><span class="op">$</span><span class="va">p.value</span><span class="op">)</span>,</span>
-<span>  metric_name <span class="op">=</span> <span class="st">"-Log(p-value)"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><img src="res/pregnancy_metric.png"></p>
+<p>The project structure is inspired by Zach Mayer’s <a href="https://github.com/zachmayer/caretEnsemble" class="external-link"><code>caretEnsemble</code></a> package, which is used for stacking multiple models on a single dataset.</p>
 </div>
 </div>
 
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/JoshD898/caretMultimodal/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/JoshD898/caretMultimodal/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://github.com/CompBio-Lab/caretMultimodal/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/CompBio-Lab/caretMultimodal/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -245,6 +119,7 @@
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Josh Dyce <br><small class="roles"> Author, maintainer </small>   </li>
+<li>Amrit Singh <br><small class="roles"> Author </small>   </li>
 </ul>
 </div>
 
@@ -261,7 +136,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Josh Dyce.</p>
+  <p>Developed by Josh Dyce, Amrit Singh.</p>
 </div>
 
 <div class="pkgdown-footer-right">

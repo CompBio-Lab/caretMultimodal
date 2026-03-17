@@ -1,4 +1,4 @@
-# Ensemble the models of a `caret_list` object
+# Construct a `caret_stack` object.
 
 Train an ensemble (stacked) model from the base learners in a
 `caret_list`. The ensemble is itself a
@@ -17,8 +17,8 @@ caret_stack(
   method,
   data_list = NULL,
   target = NULL,
-  metric = NULL,
   trControl = NULL,
+  metric = NULL,
   ...
 )
 ```
@@ -39,7 +39,7 @@ caret_stack(
 
   A list of datasets to predict on, with each dataset matching the
   corresponding model in `caret_list`. If `NULL`, the out-of-fold
-  predictions from the base models will be used.
+  predictions from the base models will be used. Default is `NULL`.
 
 - target:
 
@@ -47,19 +47,20 @@ caret_stack(
   data list. If `NULL`, the target vector used to train the base models
   will be used.
 
-- metric:
-
-  Metric for use with
-  [`caret::train`](https://rdrr.io/pkg/caret/man/train.html) function.
-  If `NULL`, default metric will be constructed depending on the target
-  type.
-
 - trControl:
 
   Control for use with the
   [`caret::train`](https://rdrr.io/pkg/caret/man/train.html) function.
-  If `NULL`, a default control will be constructed depending on the
-  target type. TODO hyperlink default arguments + add quick description
+  If `NULL`, `.default_control()` is used to construct a default control
+  (5-fold cross validation) depending on the target type. Default is
+  `NULL`.
+
+- metric:
+
+  Metric for use with
+  [`caret::train`](https://rdrr.io/pkg/caret/man/train.html) function.
+  If `NULL`, `.default_metric()` is used to construct a default metric
+  depending on the target type. Default is `NULL`.
 
 - ...:
 
@@ -69,3 +70,33 @@ caret_stack(
 ## Value
 
 A `caret_stack` object.
+
+## Examples
+
+``` r
+set.seed(42)
+
+data(heart_failure_datasets)
+
+data_list <-  heart_failure_datasets[c("cells", "holter", "mrna", "proteins")]
+
+# Define hyperparameters to tune (optional)
+tuneGrid <- expand.grid(alpha = 0.5, lambda = c(0.01, 0.1))
+
+# Construct caret_list object
+base_models <- caret_list(
+  target = heart_failure_datasets$demo$hospitalizations,
+  data_list = data_list,
+  method = "glmnet",
+  tuneGrid = tuneGrid
+)
+
+# Train a Random Forest stacked model on the out-of-fold predictions from the base models
+stacked_model <- caret_stack(
+  caret_list = base_models,
+  method = "rf"
+)
+
+class(stacked_model)
+#> [1] "caret_stack"
+```

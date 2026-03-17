@@ -28,3 +28,12 @@ plot_feature_contributions(object, n_features = 20, ...)
 ## Value
 
 A `ggplot2` bar plot
+
+## Examples
+
+``` r
+# Load pre-trained example caret_stack object
+data(heart_failure_stack)
+
+plot_feature_contributions(heart_failure_stack)
+```

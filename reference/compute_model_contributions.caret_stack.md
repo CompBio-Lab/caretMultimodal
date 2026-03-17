@@ -30,3 +30,18 @@ compute_model_contributions(object, descending = TRUE, ...)
 ## Value
 
 A `data.table`
+
+## Examples
+
+``` r
+# Load pre-trained example caret_stack object
+data(heart_failure_stack)
+
+compute_model_contributions(heart_failure_stack)
+#>       Model Relative Contribution
+#>      <char>                 <num>
+#> 1:   holter               44.1023
+#> 2:     mrna               35.3940
+#> 3: proteins               20.5037
+#> 4:    cells                0.0000
+```

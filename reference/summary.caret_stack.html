@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">caretMultimodal</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,7 +18,7 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/JoshD898/caretMultimodal/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/CompBio-Lab/caretMultimodal/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -28,7 +28,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Get a summary of a <code>caret_stack</code> object</h1>
-      <small class="dont-index">Source: <a href="https://github.com/JoshD898/caretMultimodal/blob/main/R/caret_stack.R" class="external-link"><code>R/caret_stack.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/CompBio-Lab/caretMultimodal/blob/main/R/caret_stack.R" class="external-link"><code>R/caret_stack.R</code></a></small>
       <div class="d-none name"><code>summary.caret_stack.Rd</code></div>
     </div>
 
@@ -59,12 +59,34 @@
     <p>A <code>data.table</code> of methods, tuning parameters and performance metrics for the base and ensemble model</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Load pre-trained example caret_stack object</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">heart_failure_stack</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">heart_failure_stack</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       model method alpha lambda       ROC      Sens       Spec      ROCSD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      &lt;char&gt; &lt;char&gt; &lt;num&gt;  &lt;num&gt;     &lt;num&gt;     &lt;num&gt;      &lt;num&gt;      &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:    cells glmnet 0.850  0.091 0.7740741 0.9777778 0.00000000 0.14721931</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:   holter glmnet 0.850  0.081 0.7851852 1.0000000 0.16666667 0.08842471</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:     mrna glmnet 0.925  0.091 0.8111111 0.9777778 0.06666667 0.16789670</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4: proteins glmnet 0.700  0.001 0.8962963 0.9555556 0.46666667 0.09128709</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5: ensemble glmnet 0.925  0.071 0.9407407 0.9555556 0.40000000 0.06728112</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        SensSD    SpecSD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;num&gt;     &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 0.04969040 0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 0.00000000 0.2357023</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: 0.04969040 0.1490712</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4: 0.06085806 0.4472136</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5: 0.09938080 0.2527625</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Josh Dyce.</p>
+  <p>Developed by Josh Dyce, Amrit Singh.</p>
 </div>
 
 <div class="pkgdown-footer-right">

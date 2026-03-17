@@ -29,3 +29,12 @@ plot_roc(object, include_auc = TRUE, ...)
 ## Value
 
 A `ggplot2` object
+
+## Examples
+
+``` r
+# Load pre-trained example caret_stack object
+data(heart_failure_stack)
+
+plot_roc(heart_failure_stack)
+```
