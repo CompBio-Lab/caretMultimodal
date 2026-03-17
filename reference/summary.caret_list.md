@@ -27,14 +27,23 @@ A `data.table` with tunes and metrics from each model.
 ## Examples
 
 ``` r
-# Load pre-trained caret_list object from package data
-data(regression_stack)
-#> Warning: data set ‘regression_stack’ not found
-models <- regression_stack$caret_list
-#> Error: object 'regression_stack' not found
+# Load pre-trained example caret_stack object
+data(heart_failure_stack)
 
-# Models is a caret_stack object made with 7 datasets, using a GLMNET method,
-# 5-fold cross validation, tuned over a grid of alpha and lambda
-summary(models)
-#> Error: object 'models' not found
+# Extract the caret_list object from the caret_stack
+base_models <- heart_failure_stack$caret_list
+
+summary(base_models)
+#>       model method alpha lambda       ROC      Sens       Spec      ROCSD
+#>      <char> <char> <num>  <num>     <num>     <num>      <num>      <num>
+#> 1:    cells glmnet 0.850  0.091 0.7740741 0.9777778 0.00000000 0.14721931
+#> 2:   holter glmnet 0.850  0.081 0.7851852 1.0000000 0.16666667 0.08842471
+#> 3:     mrna glmnet 0.925  0.091 0.8111111 0.9777778 0.06666667 0.16789670
+#> 4: proteins glmnet 0.700  0.001 0.8962963 0.9555556 0.46666667 0.09128709
+#>        SensSD    SpecSD
+#>         <num>     <num>
+#> 1: 0.04969040 0.0000000
+#> 2: 0.00000000 0.2357023
+#> 3: 0.04969040 0.1490712
+#> 4: 0.06085806 0.4472136
 ```

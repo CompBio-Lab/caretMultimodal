@@ -1,6 +1,8 @@
-# Plot the results of an ablation analysis for a caret_stack model.
+# Make a bar plot of an ablation analysis for a `caret_stack`.
 
-Contructs a bar plot with the output of the `compute_ablation` method.
+Makes a bar plot from
+[`compute_ablation.caret_stack`](https://compbio-lab.github.io/caretMultimodal/reference/compute_ablation.caret_stack.md)
+output.
 
 ## Usage
 
@@ -19,17 +21,19 @@ plot_ablation(object, metric_function, metric_name, reverse = FALSE, ...)
 
   A function that takes two arguments `(predictions, target)` and
   returns a single numeric value representing the metric to compute
-  (e.g., RMSE, accuracy, AUC).
+  (e.g., RMSE, accuracy, AUC). `predictions` are the ensemble's
+  out-of-fold predicted values and `target` is the response vector.
 
 - metric_name:
 
-  The name of the metric
+  The name of the metric. Used as a row label in the returned
+  `data.frame`.
 
 - reverse:
 
-  The direction to ablate in. If `FALSE`, the lowest contributing model
-  is removed at each iteration. If `TRUE`, the highest contributing
-  model is removed. Default is `FALSE`.
+  Logical, controls the direction to ablate in. If `FALSE`, the lowest
+  contributing model is removed at each iteration. If `TRUE`, the
+  highest contributing model is removed. Default is `FALSE`.
 
 - ...:
 
@@ -37,7 +41,7 @@ plot_ablation(object, metric_function, metric_name, reverse = FALSE, ...)
 
 ## Value
 
-A `data.table`
+A `ggplot2` bar plot
 
 ## Examples
 
@@ -53,28 +57,4 @@ metric_fun <- function(preds, target) {
 }
 
 plot_ablation(heart_failure_stack, metric_fun, "AUC")
-#> [1] "cells"
-#>         Row Ablation_1
-#>      <char>      <num>
-#> 1:    cells  0.0000000
-#> 2:   holter 44.1022985
-#> 3:     mrna 35.3940024
-#> 4: proteins 20.5036991
-#> 5:      AUC  0.9145299
-#> [1] "proteins"
-#>         Row Ablation_1 Ablation_2
-#>      <char>      <num>      <num>
-#> 1:    cells  0.0000000         NA
-#> 2:   holter 44.1022985 44.0964872
-#> 3:     mrna 35.3940024 35.0032406
-#> 4: proteins 20.5036991 20.9002722
-#> 5:      AUC  0.9145299  0.9316239
-#> [1] "mrna"
-#>         Row Ablation_1 Ablation_2 Ablation_3
-#>      <char>      <num>      <num>      <num>
-#> 1:    cells  0.0000000         NA         NA
-#> 2:   holter 44.1022985 44.0964872 58.8999619
-#> 3:     mrna 35.3940024 35.0032406 41.1000381
-#> 4: proteins 20.5036991 20.9002722         NA
-#> 5:      AUC  0.9145299  0.9316239  0.8393162
 ```

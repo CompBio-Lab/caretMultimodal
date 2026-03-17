@@ -1,13 +1,20 @@
-# Compute the feature level contributions for a caret_stack model.
+# Compute the feature level contributions for a `caret_stack`.
 
-Feature-level contributions for the ensemble model are computed using a
-two-stage application of caret::varImp. First, varImp is applied to the
-ensemble model, where the base-model predictions are treated as
-features, yielding dataset-level weights. Next, varImp is applied to
-each base model to obtain feature-level importance scores within each
-dataset. The final contribution of an individual feature to the ensemble
-is calculated as the product of its dataset-level weight and its
-feature-level importance within the corresponding base model.
+Computes the contribution of each individual feature to the ensemble's
+predictions using a two-stage application of
+[`caret::varImp`](https://rdrr.io/pkg/caret/man/varImp.html):
+
+1.  **Dataset-level weights:** `varImp` is applied to the ensemble
+    meta-learner, treating each base model's predictions as a feature.
+    This yields a relative importance weight for each dataset.
+
+2.  **Feature-level importance:** `varImp` is applied to each base model
+    individually, yielding feature importance scores within each
+    dataset.
+
+The final contribution of a feature is the product of its dataset-level
+weight and its within-dataset feature importance score. All scores are
+normalized to sum to 100.
 
 ## Usage
 

@@ -1,7 +1,7 @@
-# Plot the feature level contributions to a stacked model
+# Make a bar plot of feature level for a `caret_stack`.
 
-Constructs a bar plot with the output of the
-`compute_feature_contributions` method.
+Constructs a bar plot with the output of
+[`compute_feature_contributions.caret_stack`](https://compbio-lab.github.io/caretMultimodal/reference/compute_feature_contributions.caret_stack.md).
 
 ## Usage
 
@@ -27,7 +27,7 @@ plot_feature_contributions(object, n_features = 20, ...)
 
 ## Value
 
-A `ggplot2` bar plot
+A `ggplot2` bar plot.
 
 ## Examples
 

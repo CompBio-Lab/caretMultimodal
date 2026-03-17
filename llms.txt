@@ -109,16 +109,24 @@ which is used for stacking multiple models on a single dataset.
   ensemble model
 
 - [`compute_ablation(`*`<caret_stack>`*`)`](https://compbio-lab.github.io/caretMultimodal/reference/compute_ablation.caret_stack.md)
-  : Perform an ablation analysis for a caret_stack model.
+  :
+
+  Perform an ablation analysis for a `caret_stack`
 
 - [`plot_ablation(`*`<caret_stack>`*`)`](https://compbio-lab.github.io/caretMultimodal/reference/plot_ablation.caret_stack.md)
-  : Plot the results of an ablation analysis for a caret_stack model.
+  :
+
+  Make a bar plot of an ablation analysis for a `caret_stack`.
 
 - [`compute_feature_contributions(`*`<caret_stack>`*`)`](https://compbio-lab.github.io/caretMultimodal/reference/compute_feature_contributions.caret_stack.md)
-  : Compute the feature level contributions for a caret_stack model.
+  :
+
+  Compute the feature level contributions for a `caret_stack`.
 
 - [`plot_feature_contributions(`*`<caret_stack>`*`)`](https://compbio-lab.github.io/caretMultimodal/reference/plot_feature_contributions.caret_stack.md)
-  : Plot the feature level contributions to a stacked model
+  :
+
+  Make a bar plot of feature level for a `caret_stack`.
 
 ## Miscellaneous Helper Functions
 

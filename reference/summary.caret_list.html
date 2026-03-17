@@ -3,11 +3,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">caretMultimodal</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,16 +61,25 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Load pre-trained caret_list object from package data</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">regression_stack</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>data set ‘regression_stack’ not found</span>
-<span class="r-in"><span><span class="va">models</span> <span class="op">&lt;-</span> <span class="va">regression_stack</span><span class="op">$</span><span class="va">caret_list</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'regression_stack' not found</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Load pre-trained example caret_stack object</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">heart_failure_stack</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Models is a caret_stack object made with 7 datasets, using a GLMNET method,</span></span></span>
-<span class="r-in"><span><span class="co"># 5-fold cross validation, tuned over a grid of alpha and lambda</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">models</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'models' not found</span>
+<span class="r-in"><span><span class="co"># Extract the caret_list object from the caret_stack</span></span></span>
+<span class="r-in"><span><span class="va">base_models</span> <span class="op">&lt;-</span> <span class="va">heart_failure_stack</span><span class="op">$</span><span class="va">caret_list</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">base_models</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       model method alpha lambda       ROC      Sens       Spec      ROCSD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      &lt;char&gt; &lt;char&gt; &lt;num&gt;  &lt;num&gt;     &lt;num&gt;     &lt;num&gt;      &lt;num&gt;      &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:    cells glmnet 0.850  0.091 0.7740741 0.9777778 0.00000000 0.14721931</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:   holter glmnet 0.850  0.081 0.7851852 1.0000000 0.16666667 0.08842471</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:     mrna glmnet 0.925  0.091 0.8111111 0.9777778 0.06666667 0.16789670</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4: proteins glmnet 0.700  0.001 0.8962963 0.9555556 0.46666667 0.09128709</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        SensSD    SpecSD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;num&gt;     &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1: 0.04969040 0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2: 0.00000000 0.2357023</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3: 0.04969040 0.1490712</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4: 0.06085806 0.4472136</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
