@@ -14,3 +14,4 @@ plot_feature_contributions(object, ...)
 \description{
 Plot feature level contributions for a \code{caret_stack} object
 }
+\keyword{internal}

@@ -14,3 +14,4 @@ plot_roc(object, ...)
 \description{
 Make an ROC plot for a \code{caret_stack} object
 }
+\keyword{internal}

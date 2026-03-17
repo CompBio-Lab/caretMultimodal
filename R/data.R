@@ -24,5 +24,7 @@
 #' A `caret_stack` object pre-trained on `heart_failure_datasets`.
 #' Used in examples throughout the caretMultimodal package.
 #'
+#' @format A `caret_stack` object
+#'
 #' @seealso [`heart_failure_datasets`]
 "heart_failure_stack"

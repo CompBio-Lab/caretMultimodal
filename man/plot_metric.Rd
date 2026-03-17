@@ -14,3 +14,4 @@ plot_metric(object, ...)
 \description{
 Plot metrics for a \code{caret_stack} object
 }
+\keyword{internal}

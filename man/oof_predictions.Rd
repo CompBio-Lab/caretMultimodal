@@ -14,3 +14,4 @@ oof_predictions(object, ...)
 \description{
 Extract out-of-fold predictions from \code{caret_list} or \code{caret_stack} objects
 }
+\keyword{internal}

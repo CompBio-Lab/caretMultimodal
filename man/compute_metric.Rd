@@ -14,3 +14,4 @@ compute_metric(object, ...)
 \description{
 Compute metrics for a \code{caret_stack} object
 }
+\keyword{internal}

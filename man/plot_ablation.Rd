@@ -14,3 +14,4 @@ plot_ablation(object, ...)
 \description{
 Plot an ablation analysis with a \code{caret_stack} object
 }
+\keyword{internal}

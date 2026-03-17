@@ -14,3 +14,4 @@ compute_feature_contributions(object, ...)
 \description{
 Compute feature level contributions for a \code{caret_stack} object
 }
+\keyword{internal}

@@ -14,3 +14,4 @@ plot_model_contributions(object, ...)
 \description{
 Plot base model contributions for a \code{caret_stack} object
 }
+\keyword{internal}

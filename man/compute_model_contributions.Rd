@@ -14,3 +14,4 @@ compute_model_contributions(object, ...)
 \description{
 Compute base model contributions for a \code{caret_stack} object
 }
+\keyword{internal}
