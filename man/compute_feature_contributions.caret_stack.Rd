@@ -2,7 +2,7 @@
 % Please edit documentation in R/caret_stack.R
 \name{compute_feature_contributions.caret_stack}
 \alias{compute_feature_contributions.caret_stack}
-\title{Compute the feature level contributions for a caret_stack model.}
+\title{Compute the feature level contributions for a \code{caret_stack}.}
 \usage{
 \method{compute_feature_contributions}{caret_stack}(object, n_features = 20, ...)
 }
@@ -18,14 +18,20 @@ large value will include all features. Default is 20.}
 A \code{data.table}
 }
 \description{
-Feature-level contributions for the ensemble model are
-computed using a two-stage application of caret::varImp. First,
-varImp is applied to the ensemble model, where the base-model predictions
-are treated as features, yielding dataset-level weights. Next, varImp is
-applied to each base model to obtain feature-level importance scores within
-each dataset. The final contribution of an individual feature to the ensemble
-is calculated as the product of its dataset-level weight and its feature-level
-importance within the corresponding base model.
+Computes the contribution of each individual feature to the ensemble's
+predictions using a two-stage application of \code{\link[caret:varImp]{caret::varImp}}:
+
+\enumerate{
+\item \strong{Dataset-level weights:} \code{varImp} is applied to the
+ensemble meta-learner, treating each base model's predictions as a
+feature. This yields a relative importance weight for each dataset.
+\item \strong{Feature-level importance:} \code{varImp} is applied to
+each base model individually, yielding feature importance scores
+within each dataset.
+}
+
+The final contribution of a feature is the product of its dataset-level
+weight and its within-dataset feature importance score. All scores are normalized to sum to 100.
 }
 \examples{
 # Load pre-trained example caret_stack object

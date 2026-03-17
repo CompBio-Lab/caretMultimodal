@@ -2,7 +2,7 @@
 % Please edit documentation in R/caret_stack.R
 \name{plot_feature_contributions.caret_stack}
 \alias{plot_feature_contributions.caret_stack}
-\title{Plot the feature level contributions to a stacked model}
+\title{Make a bar plot of feature level  for a \code{caret_stack}.}
 \usage{
 \method{plot_feature_contributions}{caret_stack}(object, n_features = 20, ...)
 }
@@ -15,10 +15,10 @@ large value will include all features. Default is 20.}
 \item{...}{Not used. Included for S3 compatibility.}
 }
 \value{
-A \code{ggplot2} bar plot
+A \code{ggplot2} bar plot.
 }
 \description{
-Constructs a bar plot with the output of the \code{compute_feature_contributions} method.
+Constructs a bar plot with the output of \code{\link{compute_feature_contributions.caret_stack}}.
 }
 \examples{
 # Load pre-trained example caret_stack object

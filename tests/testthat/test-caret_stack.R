@@ -86,7 +86,7 @@ caret_stack_generic_test <- function(target, data_list, method) {
 
     expect_s3_class(ablation, "data.table")
     expect_equal(nrow(ablation), length(data_list) + 1)
-    expect_equal(ncol(ablation), length(data_list)) # one column for model names, then n - 1 columns for ablation runs
+    expect_equal(ncol(ablation), length(data_list) + 1)
 
     expect_s3_class(suppressWarnings(plot_ablation(stack, metric_function = metric_fun, metric_name = "metric", reverse = TRUE)), "ggplot")
   })
@@ -106,11 +106,11 @@ caret_stack_generic_test(
   data_list = list(df1, df2, df3),
   method = "glmnet")
 
-# caret_stack_generic_test(
-#   target = binary_vector,
-#   data_list = list(df1, df2, df3),
-#   method = "rf")
-#
+caret_stack_generic_test(
+  target = binary_vector,
+  data_list = list(df1, df2, df3),
+  method = "rf")
+
 # caret_stack_generic_test(
 #   target = multiclass_vector,
 #   data_list = list(df1, df2, df3),

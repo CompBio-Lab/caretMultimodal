@@ -535,28 +535,35 @@ plot_model_contributions.caret_stack <- function(
     ggplot2::scale_fill_manual(values = attr(caret_stack, "model_colors"))
 }
 
-#' @title Perform an ablation analysis for a caret_stack model.
+#' @title Perform an ablation analysis for a `caret_stack`
 #' @description
-#' This function performs a systematic ablation analysis on a `caret_stack` ensemble to evaluate
-#' each base learner's contribution to predictive performance. The procedure begins with the full
-#' set of base model predictions and iteratively removes one model at a time. At each iteration, the ensemble
-#' model is retrained on the remaining learners using the same `method`, `tuneGrid`, and
-#' `trControl` settings as the original stack. Model importance in the ensemble is estimated, and
-#' the learner with the lowest (or highest, if `reverse = TRUE`) relative contribution is removed.
+#' This function performs an ablation analysis on a `caret_stack` ensemble to evaluate
+#' each base learner's contribution to predictive performance.
 #'
-#' After each ablation step, out-of-fold predictions are generated and evaluated using the
-#' user-supplied `metric_function`, which should accept two arguments `(predictions, target)` and
-#' return a single numeric value (e.g., RMSE, accuracy, AUC). The resulting performance metrics and
-#' model contribution estimates are recorded at each stage and returned as a `data.table`.
+#' Starting from the full ensemble, the procedure iteratively removes one base learner
+#' per step. At each step:
+#'
+#' \enumerate{
+#'   \item The ensemble meta-learner is retrained on the remaining base learners,
+#'         using the same `method`, `tuneGrid`, and `trControl` as
+#'         the original stack.
+#'   \item Variable importance scores are extracted from the retrained meta-learner
+#'         to estimate each remaining learner's relative contribution.
+#'   \item Out-of-fold predictions are generated and scored with `metric_function`.
+#'   \item The learner with the lowest importance score (or highest, if
+#'         `reverse = TRUE`) is removed before the next iteration.
+#' }
 #'
 #' @param object A `caret_stack` object.
 #' @param metric_function A function that takes two arguments `(predictions, target)`
 #' and returns a single numeric value representing the metric to compute (e.g., RMSE, accuracy, AUC).
-#' @param metric_name The name of the metric
-#' @param reverse The direction to ablate in. If `FALSE`, the lowest contributing model is removed at each iteration.
+#' `predictions` are the ensemble's out-of-fold predicted values and `target` is the response vector.
+#' @param metric_name The name of the metric. Used as a row label in the returned `data.frame`.
+#' @param reverse Logical, controls the direction to ablate in. If `FALSE`, the lowest contributing model is removed at each iteration.
 #' If `TRUE`, the highest contributing model is removed. Default is `FALSE`.
 #' @param ... Not used. Included for S3 compatibility.
 #' @return A `data.table`
+#' @note This function does not support for multiclass classifiers.
 #' @examples
 #' # Load pre-trained example caret_stack object
 #' data(heart_failure_stack)
@@ -578,6 +585,10 @@ compute_ablation.caret_stack <- function(
     ...) {
   caret_stack <- object
   ensemble <- caret_stack$ensemble
+
+  if (length(ensemble$levels) > 2) {
+    stop("`compute_ablation.caret_stack` does not support multiclass classifiers.")
+  }
 
   method <- ensemble$method
   tuneGrid <- ensemble$results[, names(ensemble$bestTune), drop = FALSE]
@@ -603,7 +614,6 @@ compute_ablation.caret_stack <- function(
 
     imp <- scaled_varImp(ensemble_model)
     remove_model <- if (reverse) imp[which.max(`Relative Contribution`), Model] else imp[which.min(`Relative Contribution`), Model]
-    print(remove_model)
     training_data[[remove_model]] <- NULL
 
     oof_pred <- .get_oof_preds(ensemble_model, aggregate_resamples = TRUE)
@@ -615,23 +625,29 @@ compute_ablation.caret_stack <- function(
     new_col <- c(imp[match(results$Row, imp$Model), `Relative Contribution`])
     new_col[length(new_col)] <- metric_val
     results[[paste0("Ablation_", ncol(results))]] <- new_col
-
-    print(results)
   }
+
+  final_metric <- metric_function(as.numeric(training_data[[1]]), target)
+  last_model <- names(training_data)[[1]]
+  new_col <- rep(NA_real_, nrow(results))
+  new_col[results$Row == last_model] <- 100
+  new_col[nrow(results)] <- final_metric
+  results[[paste0("Ablation_", ncol(results))]] <- new_col
 
   results
 }
 
-#' @title Plot the results of an ablation analysis for a caret_stack model.
-#' @description Contructs a bar plot with the output of the `compute_ablation` method.
+#' @title Make a bar plot of an ablation analysis for a `caret_stack`.
+#' @description Makes a bar plot from [`compute_ablation.caret_stack`] output.
 #' @param object A `caret_stack` object.
 #' @param metric_function A function that takes two arguments `(predictions, target)`
 #' and returns a single numeric value representing the metric to compute (e.g., RMSE, accuracy, AUC).
-#' @param metric_name The name of the metric
-#' @param reverse The direction to ablate in. If `FALSE`, the lowest contributing model is removed at each iteration.
+#' `predictions` are the ensemble's out-of-fold predicted values and `target` is the response vector.
+#' @param metric_name The name of the metric. Used as a row label in the returned `data.frame`.
+#' @param reverse Logical, controls the direction to ablate in. If `FALSE`, the lowest contributing model is removed at each iteration.
 #' If `TRUE`, the highest contributing model is removed. Default is `FALSE`.
 #' @param ... Not used. Included for S3 compatibility.
-#' @return A `data.table`
+#' @return A `ggplot2` bar plot
 #' @examples
 #' # Load pre-trained example caret_stack object
 #' data(heart_failure_stack)
@@ -674,15 +690,22 @@ plot_ablation.caret_stack <- function(
 
 
 
-#' @title Compute the feature level contributions for a caret_stack model.
-#' @description Feature-level contributions for the ensemble model are
-#' computed using a two-stage application of caret::varImp. First,
-#' varImp is applied to the ensemble model, where the base-model predictions
-#' are treated as features, yielding dataset-level weights. Next, varImp is
-#' applied to each base model to obtain feature-level importance scores within
-#' each dataset. The final contribution of an individual feature to the ensemble
-#' is calculated as the product of its dataset-level weight and its feature-level
-#' importance within the corresponding base model.
+#' @title Compute the feature level contributions for a `caret_stack`.
+#' @description
+#' Computes the contribution of each individual feature to the ensemble's
+#' predictions using a two-stage application of [`caret::varImp`]:
+#'
+#' \enumerate{
+#'   \item \strong{Dataset-level weights:} `varImp` is applied to the
+#'     ensemble meta-learner, treating each base model's predictions as a
+#'     feature. This yields a relative importance weight for each dataset.
+#'   \item \strong{Feature-level importance:} `varImp` is applied to
+#'     each base model individually, yielding feature importance scores
+#'     within each dataset.
+#' }
+#'
+#' The final contribution of a feature is the product of its dataset-level
+#' weight and its within-dataset feature importance score. All scores are normalized to sum to 100.
 #' @param object A `caret_stack` object.
 #' @param n_features The maximum number of features to include. Setting to a very
 #' large value will include all features. Default is 20.
@@ -726,13 +749,13 @@ compute_feature_contributions.caret_stack <- function(
   results[1:min_features]
 }
 
-#' @title Plot the feature level contributions to a stacked model
-#' @description Constructs a bar plot with the output of the `compute_feature_contributions` method.
+#' @title Make a bar plot of feature level  for a `caret_stack`.
+#' @description Constructs a bar plot with the output of [`compute_feature_contributions.caret_stack`].
 #' @param object A `caret_stack` object.
 #' @param n_features The maximum number of features to include. Setting to a very
 #' large value will include all features. Default is 20.
 #' @param ... Not used. Included for S3 compatibility.
-#' @return A `ggplot2` bar plot
+#' @return A `ggplot2` bar plot.
 #' @examples
 #' # Load pre-trained example caret_stack object
 #' data(heart_failure_stack)

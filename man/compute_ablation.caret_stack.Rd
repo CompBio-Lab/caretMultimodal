@@ -2,7 +2,7 @@
 % Please edit documentation in R/caret_stack.R
 \name{compute_ablation.caret_stack}
 \alias{compute_ablation.caret_stack}
-\title{Perform an ablation analysis for a caret_stack model.}
+\title{Perform an ablation analysis for a \code{caret_stack}}
 \usage{
 \method{compute_ablation}{caret_stack}(object, metric_function, metric_name, reverse = FALSE, ...)
 }
@@ -10,11 +10,12 @@
 \item{object}{A \code{caret_stack} object.}
 
 \item{metric_function}{A function that takes two arguments \verb{(predictions, target)}
-and returns a single numeric value representing the metric to compute (e.g., RMSE, accuracy, AUC).}
+and returns a single numeric value representing the metric to compute (e.g., RMSE, accuracy, AUC).
+\code{predictions} are the ensemble's out-of-fold predicted values and \code{target} is the response vector.}
 
-\item{metric_name}{The name of the metric}
+\item{metric_name}{The name of the metric. Used as a row label in the returned \code{data.frame}.}
 
-\item{reverse}{The direction to ablate in. If \code{FALSE}, the lowest contributing model is removed at each iteration.
+\item{reverse}{Logical, controls the direction to ablate in. If \code{FALSE}, the lowest contributing model is removed at each iteration.
 If \code{TRUE}, the highest contributing model is removed. Default is \code{FALSE}.}
 
 \item{...}{Not used. Included for S3 compatibility.}
@@ -23,17 +24,25 @@ If \code{TRUE}, the highest contributing model is removed. Default is \code{FALS
 A \code{data.table}
 }
 \description{
-This function performs a systematic ablation analysis on a \code{caret_stack} ensemble to evaluate
-each base learner's contribution to predictive performance. The procedure begins with the full
-set of base model predictions and iteratively removes one model at a time. At each iteration, the ensemble
-model is retrained on the remaining learners using the same \code{method}, \code{tuneGrid}, and
-\code{trControl} settings as the original stack. Model importance in the ensemble is estimated, and
-the learner with the lowest (or highest, if \code{reverse = TRUE}) relative contribution is removed.
+This function performs an ablation analysis on a \code{caret_stack} ensemble to evaluate
+each base learner's contribution to predictive performance.
 
-After each ablation step, out-of-fold predictions are generated and evaluated using the
-user-supplied \code{metric_function}, which should accept two arguments \verb{(predictions, target)} and
-return a single numeric value (e.g., RMSE, accuracy, AUC). The resulting performance metrics and
-model contribution estimates are recorded at each stage and returned as a \code{data.table}.
+Starting from the full ensemble, the procedure iteratively removes one base learner
+per step. At each step:
+
+\enumerate{
+\item The ensemble meta-learner is retrained on the remaining base learners,
+using the same \code{method}, \code{tuneGrid}, and \code{trControl} as
+the original stack.
+\item Variable importance scores are extracted from the retrained meta-learner
+to estimate each remaining learner's relative contribution.
+\item Out-of-fold predictions are generated and scored with \code{metric_function}.
+\item The learner with the lowest importance score (or highest, if
+\code{reverse = TRUE}) is removed before the next iteration.
+}
+}
+\note{
+This function does not support for multiclass classifiers.
 }
 \examples{
 # Load pre-trained example caret_stack object

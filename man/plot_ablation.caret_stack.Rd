@@ -2,7 +2,7 @@
 % Please edit documentation in R/caret_stack.R
 \name{plot_ablation.caret_stack}
 \alias{plot_ablation.caret_stack}
-\title{Plot the results of an ablation analysis for a caret_stack model.}
+\title{Make a bar plot of an ablation analysis for a \code{caret_stack}.}
 \usage{
 \method{plot_ablation}{caret_stack}(object, metric_function, metric_name, reverse = FALSE, ...)
 }
@@ -10,20 +10,21 @@
 \item{object}{A \code{caret_stack} object.}
 
 \item{metric_function}{A function that takes two arguments \verb{(predictions, target)}
-and returns a single numeric value representing the metric to compute (e.g., RMSE, accuracy, AUC).}
+and returns a single numeric value representing the metric to compute (e.g., RMSE, accuracy, AUC).
+\code{predictions} are the ensemble's out-of-fold predicted values and \code{target} is the response vector.}
 
-\item{metric_name}{The name of the metric}
+\item{metric_name}{The name of the metric. Used as a row label in the returned \code{data.frame}.}
 
-\item{reverse}{The direction to ablate in. If \code{FALSE}, the lowest contributing model is removed at each iteration.
+\item{reverse}{Logical, controls the direction to ablate in. If \code{FALSE}, the lowest contributing model is removed at each iteration.
 If \code{TRUE}, the highest contributing model is removed. Default is \code{FALSE}.}
 
 \item{...}{Not used. Included for S3 compatibility.}
 }
 \value{
-A \code{data.table}
+A \code{ggplot2} bar plot
 }
 \description{
-Contructs a bar plot with the output of the \code{compute_ablation} method.
+Makes a bar plot from \code{\link{compute_ablation.caret_stack}} output.
 }
 \examples{
 # Load pre-trained example caret_stack object
