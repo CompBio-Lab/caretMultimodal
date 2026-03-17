@@ -2,7 +2,7 @@
 % Please edit documentation in R/caret_list.R
 \name{oof_predictions.caret_list}
 \alias{oof_predictions.caret_list}
-\title{Out-of-fold predictions from a caret_list}
+\title{Out-of-fold predictions from a \code{caret_list}}
 \usage{
 \method{oof_predictions}{caret_list}(
   object,
@@ -15,22 +15,31 @@
 \arguments{
 \item{object}{A \code{caret_list} object}
 
-\item{drop_redundant_class}{A boolean controlling whether to exclude the first class level from prediction output. Default is \code{TRUE}.}
+\item{drop_redundant_class}{Logical, whether to exclude the first class level from prediction output. Default is \code{TRUE}.}
 
-\item{aggregate_resamples}{Logical, whether to aggregate resamples across folds.}
+\item{aggregate_resamples}{Logical, whether to aggregate resamples across folds. Default is \code{TRUE}.}
 
-\item{intersection_only}{Logical, whether to trim down the out of fold predictions to only the intersection of
-samples that have data in all datasets.}
+\item{intersection_only}{Logical, whether to trim down the out-of-fold predictions to only the intersection of
+samples that are present across all models in the list (i.e., the intersection of training indices used during resampling).
+Default is \code{TRUE}.}
 
 \item{...}{Not used. Included for S3 compatibility.}
 }
 \value{
-A \code{data.table::data.table} of OOF predictions
+A \code{data.table::data.table} of out-of-fold predictions, with samples as rows and predictions as columns.
 }
 \description{
 Retrieve the out-of-fold predictions corresponding to the best
-hyperparameter setting of a trained caret model. These predictions come from
+hyperparameter setting of the trained caret models. These predictions come from
 the resampling process (not the final refit) and can optionally be aggregated
 across resamples to produce a single prediction per training instance.
-TODO touch up description
+}
+\examples{
+# Load pre-trained example caret_stack object
+data(heart_failure_stack)
+
+# Extract the caret_list object from the caret_stack
+base_models <- heart_failure_stack$caret_list
+
+oof_predictions(base_models)
 }

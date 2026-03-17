@@ -2,16 +2,16 @@
 % Please edit documentation in R/caret_list.R
 \name{predict.caret_list}
 \alias{predict.caret_list}
-\title{Create a matrix of predictions for each model in a caret_list}
+\title{Predict from a \code{caret_list}}
 \usage{
 \method{predict}{caret_list}(object, data_list, drop_redundant_class = TRUE, ...)
 }
 \arguments{
-\item{object}{A \code{caret_list} object}
+\item{object}{A \code{caret_list} object.}
 
 \item{data_list}{A list of datasets to predict on, with each dataset matching the corresponding model in \code{caret_list}.}
 
-\item{drop_redundant_class}{A boolean controlling whether to exclude the first class level from prediction output. Default is \code{TRUE}.}
+\item{drop_redundant_class}{Logical, whether to exclude the first class level from prediction output. Default is \code{TRUE}.}
 
 \item{...}{Additional arguments to pass to \code{caret::predict}}
 }
@@ -19,5 +19,20 @@
 A \code{data.table::data.table} of predictions
 }
 \description{
-This always return probabilities for classification models, with the option to drop one predicted class.
+Generate a matrix of predictions from each model in a \code{caret_list}.
+For classification models, probabilities are always returned, with the option to drop
+one class to avoid multicollinearity in downstream stacking models.
+}
+\examples{
+# Load example data and pre-trained caret_stack object
+data(heart_failure_datasets)
+data(heart_failure_stack)
+
+# Extract the caret_list object from the caret_stack
+base_models <- heart_failure_stack$caret_list
+
+# List of datasets to predict on
+data_list <- heart_failure_datasets[c("cells", "holter", "mrna", "proteins")]
+
+predict(base_models, data_list)
 }

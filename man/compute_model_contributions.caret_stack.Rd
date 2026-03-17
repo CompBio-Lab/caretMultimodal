@@ -20,3 +20,9 @@ A \code{data.table}
 The relative contributions are calculated using the \code{caret::varImp} function on the ensemble model.
 A scaling factor is applied to make the contributions sum to 100\%.
 }
+\examples{
+# Load pre-trained example caret_stack object
+data(heart_failure_stack)
+
+compute_model_contributions(heart_failure_stack)
+}

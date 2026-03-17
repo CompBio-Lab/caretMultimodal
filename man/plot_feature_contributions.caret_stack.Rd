@@ -20,3 +20,9 @@ A \code{ggplot2} bar plot
 \description{
 Constructs a bar plot with the output of the \code{compute_feature_contributions} method.
 }
+\examples{
+# Load pre-trained example caret_stack object
+data(heart_failure_stack)
+
+plot_feature_contributions(heart_failure_stack)
+}

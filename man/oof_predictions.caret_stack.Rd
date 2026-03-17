@@ -34,3 +34,9 @@ depending on model setup, these may be true out-of-fold predictions or simply
 fitted values. For classification models, the predictions always exclude the
 first class index.
 }
+\examples{
+# Load pre-trained example caret_stack object
+data(heart_failure_stack)
+
+oof_predictions(heart_failure_stack)
+}

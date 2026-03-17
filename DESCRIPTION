@@ -10,7 +10,7 @@ Description: `caretMultimodal` extends the `caret` framework to support late fus
     enabling users to train models independently across multiple data modalities and combine their
     predictions into a single meta-model. Designed for R developers, data scientists, and 
     biomedical researchers alike, `caretMultimodal` aims to make late fusion ensemble modelling
-    as accessible and flexible as single-modality workflows in `caret`.
+    as accessible and flexible as single-dataset workflows in `caret`.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

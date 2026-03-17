@@ -25,3 +25,16 @@ A \code{data.table}
 \description{
 Contructs a bar plot with the output of the \code{compute_ablation} method.
 }
+\examples{
+# Load pre-trained example caret_stack object
+data(heart_failure_stack)
+
+# Since the example stack is a binary classifier,
+# this metric function needs to take in predictions (floats) and
+# ground truth (binary vector), and produce a single number.
+metric_fun <- function(preds, target) {
+  pROC::roc(response = target, predictor = preds, quiet = TRUE)$auc
+}
+
+plot_ablation(heart_failure_stack, metric_fun, "AUC")
+}

@@ -27,3 +27,9 @@ each dataset. The final contribution of an individual feature to the ensemble
 is calculated as the product of its dataset-level weight and its feature-level
 importance within the corresponding base model.
 }
+\examples{
+# Load pre-trained example caret_stack object
+data(heart_failure_stack)
+
+compute_feature_contributions(heart_failure_stack)
+}

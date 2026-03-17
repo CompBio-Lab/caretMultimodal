@@ -17,3 +17,9 @@ A \code{data.table} of methods, tuning parameters and performance metrics for th
 \description{
 Get a summary of a \code{caret_stack} object
 }
+\examples{
+# Load pre-trained example caret_stack object
+data(heart_failure_stack)
+
+summary(heart_failure_stack)
+}

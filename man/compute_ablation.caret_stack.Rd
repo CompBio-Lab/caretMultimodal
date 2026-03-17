@@ -35,3 +35,16 @@ user-supplied \code{metric_function}, which should accept two arguments \verb{(p
 return a single numeric value (e.g., RMSE, accuracy, AUC). The resulting performance metrics and
 model contribution estimates are recorded at each stage and returned as a \code{data.table}.
 }
+\examples{
+# Load pre-trained example caret_stack object
+data(heart_failure_stack)
+
+# Since the example stack is a binary classifier,
+# this metric function needs to take in predictions (floats) and
+# ground truth (binary vector), and produce a single number.
+metric_fun <- function(preds, target) {
+  pROC::roc(response = target, predictor = preds, quiet = TRUE)$auc
+}
+
+compute_ablation(heart_failure_stack, metric_fun, "AUC")
+}

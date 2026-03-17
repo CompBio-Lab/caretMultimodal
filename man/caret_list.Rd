@@ -2,7 +2,7 @@
 % Please edit documentation in R/caret_list.R
 \name{caret_list}
 \alias{caret_list}
-\title{Create a \code{caret_list} object}
+\title{Construct a \code{caret_list} object}
 \usage{
 caret_list(
   target,
@@ -55,23 +55,20 @@ The resulting list is used as input to \code{\link[=caret_stack]{caret_stack()}}
 \examples{
 set.seed(42)
 
-# Generate fake datasets and target vector
-n <- 100
-target <- factor(sample(c("yes", "no"), n, replace = TRUE))
-data_list <- list(
-  modality1 = data.frame(a = rnorm(n), b = rnorm(n)),
-  modality2 = data.frame(c = rnorm(n), d = rnorm(n)),
-  modality3 = data.frame(e = rnorm(n), f = rnorm(n))
-)
+data(heart_failure_datasets)
+
+data_list <-  heart_failure_datasets[c("cells", "holter", "mrna", "proteins")]
 
 # Define hyperparameters to tune (optional)
-tuneGrid <- expand.grid(alpha = c(0, 0.5, 1), lambda = c(0.01, 0.1))
+tuneGrid <- expand.grid(alpha = 0.5, lambda = c(0.01, 0.1))
 
-# Train models with a tuning grid
+# Construct caret_list object
 base_models <- caret_list(
-  target = target,
+  target = heart_failure_datasets$demo$hospitalizations,
   data_list = data_list,
   method = "glmnet",
   tuneGrid = tuneGrid
 )
+
+class(base_models)
 }

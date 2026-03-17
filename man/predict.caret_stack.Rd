@@ -21,3 +21,13 @@ A \code{data.table::data.table} of predictions for base and ensemble models.
 \description{
 Create a matrix of predictions for a \code{caret_stack} object.
 }
+\examples{
+# Load example data and pre-trained caret_stack object
+data(heart_failure_datasets)
+data(heart_failure_stack)
+
+# List of datasets to predict on
+data_list <- heart_failure_datasets[c("cells", "holter", "mrna", "proteins")]
+
+predict(heart_failure_stack, data_list)
+}

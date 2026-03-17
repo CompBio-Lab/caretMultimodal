@@ -2,15 +2,15 @@
 % Please edit documentation in R/caret_stack.R
 \name{caret_stack}
 \alias{caret_stack}
-\title{Ensemble the models of a \code{caret_list} object}
+\title{Construct a \code{caret_stack} object.}
 \usage{
 caret_stack(
   caret_list,
   method,
   data_list = NULL,
   target = NULL,
-  metric = NULL,
   trControl = NULL,
+  metric = NULL,
   ...
 )
 }
@@ -25,12 +25,11 @@ If \code{NULL}, the out-of-fold predictions from the base models will be used. D
 \item{target}{Target parameter vector that must be provided if predicting on a new data list.
 If \code{NULL}, the target vector used to train the base models will be used.}
 
-\item{metric}{Metric for use with \code{caret::train} function.
-If \code{NULL}, default metric will be constructed depending on the target type.}
+\item{trControl}{Control for use with the \code{caret::train} function. If \code{NULL}, \code{.default_control()} is used
+to construct a default control (5-fold cross validation) depending on the target type. Default is \code{NULL}.}
 
-\item{trControl}{Control for use with the \code{caret::train} function.
-If \code{NULL}, a default control will be constructed depending on the target type.
-TODO hyperlink default arguments + add quick description}
+\item{metric}{Metric for use with \code{caret::train} function. If \code{NULL}, \code{.default_metric()} is used
+to construct a default metric depending on the target type. Default is \code{NULL}.}
 
 \item{...}{Additional arguments to pass to \code{caret::train}}
 }
@@ -45,4 +44,30 @@ trained on out-of-fold predictions from the resampling process, ensuring that
 the ensemble does not overfit to in-sample predictions. Alternatively, new
 datasets can be supplied via \code{data_list} and \code{target} for transfer-learning
 style ensembling.
+}
+\examples{
+set.seed(42)
+
+data(heart_failure_datasets)
+
+data_list <-  heart_failure_datasets[c("cells", "holter", "mrna", "proteins")]
+
+# Define hyperparameters to tune (optional)
+tuneGrid <- expand.grid(alpha = 0.5, lambda = c(0.01, 0.1))
+
+# Construct caret_list object
+base_models <- caret_list(
+  target = heart_failure_datasets$demo$hospitalizations,
+  data_list = data_list,
+  method = "glmnet",
+  tuneGrid = tuneGrid
+)
+
+# Train a Random Forest stacked model on the out-of-fold predictions from the base models
+stacked_model <- caret_stack(
+  caret_list = base_models,
+  method = "rf"
+)
+
+class(stacked_model)
 }

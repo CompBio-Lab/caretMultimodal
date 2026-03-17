@@ -24,3 +24,16 @@ A \code{data.table} of metrics
 \description{
 The metric_function is applied to the out-of-fold predictions for the caret_stack.
 }
+\examples{
+# Load pre-trained example caret_stack object
+data(heart_failure_stack)
+
+# Since the example stack is a binary classifier,
+# this metric function needs to take in predictions (floats) and
+# ground truth (binary vector), and produce a single number.
+metric_fun <- function(preds, target) {
+  pROC::roc(response = target, predictor = preds, quiet = TRUE)$auc
+}
+
+compute_metric(heart_failure_stack, metric_fun, "AUC")
+}

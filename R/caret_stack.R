@@ -1,4 +1,4 @@
-#' @title Ensemble the models of a `caret_list` object
+#' @title Construct a `caret_stack` object.
 #' @description Train an ensemble (stacked) model from the base learners in a
 #'   `caret_list`. The ensemble is itself a `caret::train` model that learns to
 #'   combine the predictions of the base models. By default, the meta-learner is
@@ -13,21 +13,45 @@
 #' If `NULL`, the out-of-fold predictions from the base models will be used. Default is `NULL`.
 #' @param target Target parameter vector that must be provided if predicting on a new data list.
 #' If `NULL`, the target vector used to train the base models will be used.
-#' @param metric Metric for use with `caret::train` function.
-#' If `NULL`, default metric will be constructed depending on the target type.
-#' @param trControl Control for use with the `caret::train` function.
-#' If `NULL`, a default control will be constructed depending on the target type.
-#' TODO hyperlink default arguments + add quick description
+#' @param trControl Control for use with the `caret::train` function. If `NULL`, `.default_control()` is used
+#'   to construct a default control (5-fold cross validation) depending on the target type. Default is `NULL`.
+#' @param metric Metric for use with `caret::train` function. If `NULL`, `.default_metric()` is used
+#'   to construct a default metric depending on the target type. Default is `NULL`.
 #' @param ... Additional arguments to pass to `caret::train`
 #' @return A `caret_stack` object.
+#' @examples
+#' set.seed(42)
+#'
+#' data(heart_failure_datasets)
+#'
+#' data_list <-  heart_failure_datasets[c("cells", "holter", "mrna", "proteins")]
+#'
+#' # Define hyperparameters to tune (optional)
+#' tuneGrid <- expand.grid(alpha = 0.5, lambda = c(0.01, 0.1))
+#'
+#' # Construct caret_list object
+#' base_models <- caret_list(
+#'   target = heart_failure_datasets$demo$hospitalizations,
+#'   data_list = data_list,
+#'   method = "glmnet",
+#'   tuneGrid = tuneGrid
+#' )
+#'
+#' # Train a Random Forest stacked model on the out-of-fold predictions from the base models
+#' stacked_model <- caret_stack(
+#'   caret_list = base_models,
+#'   method = "rf"
+#' )
+#'
+#' class(stacked_model)
 #' @export
 caret_stack <- function(
     caret_list,
     method,
     data_list = NULL,
     target = NULL,
-    metric = NULL,
     trControl = NULL,
+    metric = NULL,
     ...) {
 
   stopifnot(inherits(caret_list, "caret_list"))
@@ -109,7 +133,16 @@ caret_stack <- function(
 #' @param drop_redundant_class A boolean controlling whether to exclude the first class from prediction output. Default is `TRUE`.
 #' @param ... Additional arguments to pass to `caret::predict`.
 #' @return A `data.table::data.table` of predictions for base and ensemble models.
-#' @export
+#' @examples
+#' # Load example data and pre-trained caret_stack object
+#' data(heart_failure_datasets)
+#' data(heart_failure_stack)
+#'
+#' # List of datasets to predict on
+#' data_list <- heart_failure_datasets[c("cells", "holter", "mrna", "proteins")]
+#'
+#' predict(heart_failure_stack, data_list)
+#' @exportS3Method
 predict.caret_stack <- function(
     object,
     data_list,
@@ -171,7 +204,12 @@ predict.caret_stack <- function(
 #' @param aggregate_resamples Logical, whether to aggregate resamples across folds. Default is `TRUE`.
 #' @param ... Not used. Included for S3 compatibility.
 #' @return A `data.table::data.table` of OOF predictions
-#' @export
+#' @examples
+#' # Load pre-trained example caret_stack object
+#' data(heart_failure_stack)
+#'
+#' oof_predictions(heart_failure_stack)
+#' @exportS3Method
 oof_predictions.caret_stack <- function(
     object,
     drop_redundant_class = TRUE,
@@ -225,7 +263,12 @@ oof_predictions.caret_stack <- function(
 #' @param object A `caret_stack` object
 #' @param ... Not used. Included for S3 compatibility.
 #' @return A `data.table` of methods, tuning parameters and performance metrics for the base and ensemble model
-#' @export
+#' @examples
+#' # Load pre-trained example caret_stack object
+#' data(heart_failure_stack)
+#'
+#' summary(heart_failure_stack)
+#' @exportS3Method
 summary.caret_stack <- function(object, ...) {
 
   summary_dt <- summary.caret_list(object$caret_list)
@@ -255,7 +298,12 @@ summary.caret_stack <- function(object, ...) {
 #' @param include_auc Whether to include AUC values in the legend. Default is `True`.
 #' @param ... Not used. Included for S3 compatibility.
 #' @return A `ggplot2` object
-#' @export
+#' @examples
+#' # Load pre-trained example caret_stack object
+#' data(heart_failure_stack)
+#'
+#' plot_roc(heart_failure_stack)
+#' @exportS3Method
 plot_roc.caret_stack <- function(
     object,
     include_auc = TRUE,
@@ -326,7 +374,19 @@ plot_roc.caret_stack <- function(
 #' @param descending Whether to sort in descending order. If `FALSE`, the output is sorted in ascending order. Default is `TRUE`.
 #' @param ... Not used. Included for S3 compatibility.
 #' @return A `data.table` of metrics
-#' @export
+#' @examples
+#' # Load pre-trained example caret_stack object
+#' data(heart_failure_stack)
+#'
+#' # Since the example stack is a binary classifier,
+#' # this metric function needs to take in predictions (floats) and
+#' # ground truth (binary vector), and produce a single number.
+#' metric_fun <- function(preds, target) {
+#'   pROC::roc(response = target, predictor = preds, quiet = TRUE)$auc
+#' }
+#'
+#' compute_metric(heart_failure_stack, metric_fun, "AUC")
+#' @exportS3Method
 compute_metric.caret_stack <- function(
     object,
     metric_function,
@@ -377,7 +437,19 @@ compute_metric.caret_stack <- function(
 #' @param descending Whether to sort in descending order. If `FALSE`, the output is sorted in ascending order. Default is `TRUE`.
 #' @param ... Not used. Included for S3 compatibility.
 #' @return A `ggplot2` bar chart
-#' @export
+#' @examples
+#' # Load pre-trained example caret_stack object
+#' data(heart_failure_stack)
+#'
+#' # Since the example stack is a binary classifier,
+#' # this metric function needs to take in predictions (floats) and
+#' # ground truth (binary vector), and produce a single number.
+#' metric_fun <- function(preds, target) {
+#'   pROC::roc(response = target, predictor = preds, quiet = TRUE)$auc
+#' }
+#'
+#' plot_metric(heart_failure_stack, metric_fun, "AUC")
+#' @exportS3Method
 plot_metric.caret_stack <- function(
     object,
     metric_function,
@@ -412,7 +484,12 @@ plot_metric.caret_stack <- function(
 #' @param descending Whether to sort in descending order. If `FALSE`, the output is sorted in ascending order. Default is `TRUE`.
 #' @param ... Not used. Included for S3 compatibility.
 #' @return A `data.table`
-#' @export
+#' @examples
+#' # Load pre-trained example caret_stack object
+#' data(heart_failure_stack)
+#'
+#' compute_model_contributions(heart_failure_stack)
+#' @exportS3Method
 compute_model_contributions.caret_stack <- function(
     object,
     descending = TRUE,
@@ -428,7 +505,12 @@ compute_model_contributions.caret_stack <- function(
 #' @param descending Whether to sort in descending order. If `FALSE`, the output is sorted in ascending order. Default is `TRUE`.
 #' @param ... Not used. Included for S3 compatibility.
 #' @return A `ggplot2` bar chart
-#' @export
+#' @examples
+#' # Load pre-trained example caret_stack object
+#' data(heart_failure_stack)
+#'
+#' plot_model_contributions(heart_failure_stack)
+#' @exportS3Method
 plot_model_contributions.caret_stack <- function(
     object,
     descending = TRUE,
@@ -475,7 +557,19 @@ plot_model_contributions.caret_stack <- function(
 #' If `TRUE`, the highest contributing model is removed. Default is `FALSE`.
 #' @param ... Not used. Included for S3 compatibility.
 #' @return A `data.table`
-#' @export
+#' @examples
+#' # Load pre-trained example caret_stack object
+#' data(heart_failure_stack)
+#'
+#' # Since the example stack is a binary classifier,
+#' # this metric function needs to take in predictions (floats) and
+#' # ground truth (binary vector), and produce a single number.
+#' metric_fun <- function(preds, target) {
+#'   pROC::roc(response = target, predictor = preds, quiet = TRUE)$auc
+#' }
+#'
+#' compute_ablation(heart_failure_stack, metric_fun, "AUC")
+#' @exportS3Method
 compute_ablation.caret_stack <- function(
     object,
     metric_function,
@@ -538,7 +632,19 @@ compute_ablation.caret_stack <- function(
 #' If `TRUE`, the highest contributing model is removed. Default is `FALSE`.
 #' @param ... Not used. Included for S3 compatibility.
 #' @return A `data.table`
-#' @export
+#' @examples
+#' # Load pre-trained example caret_stack object
+#' data(heart_failure_stack)
+#'
+#' # Since the example stack is a binary classifier,
+#' # this metric function needs to take in predictions (floats) and
+#' # ground truth (binary vector), and produce a single number.
+#' metric_fun <- function(preds, target) {
+#'   pROC::roc(response = target, predictor = preds, quiet = TRUE)$auc
+#' }
+#'
+#' plot_ablation(heart_failure_stack, metric_fun, "AUC")
+#' @exportS3Method
 plot_ablation.caret_stack <- function(
     object,
     metric_function,
@@ -582,7 +688,12 @@ plot_ablation.caret_stack <- function(
 #' large value will include all features. Default is 20.
 #' @param ... Not used. Included for S3 compatibility.
 #' @return A `data.table`
-#' @export
+#' @examples
+#' # Load pre-trained example caret_stack object
+#' data(heart_failure_stack)
+#'
+#' compute_feature_contributions(heart_failure_stack)
+#' @exportS3Method
 compute_feature_contributions.caret_stack <- function(
     object,
     n_features = 20,
@@ -622,7 +733,12 @@ compute_feature_contributions.caret_stack <- function(
 #' large value will include all features. Default is 20.
 #' @param ... Not used. Included for S3 compatibility.
 #' @return A `ggplot2` bar plot
-#' @export
+#' @examples
+#' # Load pre-trained example caret_stack object
+#' data(heart_failure_stack)
+#'
+#' plot_feature_contributions(heart_failure_stack)
+#' @exportS3Method
 plot_feature_contributions.caret_stack <- function(
     object,
     n_features = 20,

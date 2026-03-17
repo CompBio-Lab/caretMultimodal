@@ -29,5 +29,8 @@ reference:
   - title: Miscellaneous Helper Functions
     contents:
       - prepare_mae
-      - load_gestational_age
-      - load_heart_failure
+
+
+  - title: Datasets
+    contents:
+      - heart_failure_datasets

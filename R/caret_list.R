@@ -1,4 +1,4 @@
-#' @title Create a `caret_list` object
+#' @title Construct a `caret_list` object
 #' @description Builds a list of `caret::train` objects, where each model corresponds to a data set in `data_list`.
 #'   The resulting list is used as input to [caret_stack()] to construct a meta model.
 #' @param target Target vector, either numeric for regression or a factor/character for classification.
@@ -24,25 +24,22 @@
 #' @examples
 #' set.seed(42)
 #'
-#' # Generate fake datasets and target vector
-#' n <- 100
-#' target <- factor(sample(c("yes", "no"), n, replace = TRUE))
-#' data_list <- list(
-#'   modality1 = data.frame(a = rnorm(n), b = rnorm(n)),
-#'   modality2 = data.frame(c = rnorm(n), d = rnorm(n)),
-#'   modality3 = data.frame(e = rnorm(n), f = rnorm(n))
-#' )
+#' data(heart_failure_datasets)
+#'
+#' data_list <-  heart_failure_datasets[c("cells", "holter", "mrna", "proteins")]
 #'
 #' # Define hyperparameters to tune (optional)
-#' tuneGrid <- expand.grid(alpha = c(0, 0.5, 1), lambda = c(0.01, 0.1))
+#' tuneGrid <- expand.grid(alpha = 0.5, lambda = c(0.01, 0.1))
 #'
-#' # Train models with a tuning grid
+#' # Construct caret_list object
 #' base_models <- caret_list(
-#'   target = target,
+#'   target = heart_failure_datasets$demo$hospitalizations,
 #'   data_list = data_list,
 #'   method = "glmnet",
 #'   tuneGrid = tuneGrid
 #' )
+#'
+#' class(base_models)
 #' @export
 caret_list <- function(
     target,
@@ -148,14 +145,28 @@ caret_list <- function(
 
 # Methods ------------------------------------------------------------------------------------------
 
-#' @title Create a matrix of predictions for each model in a caret_list
-#' @description This always return probabilities for classification models, with the option to drop one predicted class.
-#' @param object A `caret_list` object
+#' @title Predict from a `caret_list`
+#' @description Generate a matrix of predictions from each model in a \code{caret_list}.
+#'   For classification models, probabilities are always returned, with the option to drop
+#'   one class to avoid multicollinearity in downstream stacking models.
+#' @param object A `caret_list` object.
 #' @param data_list A list of datasets to predict on, with each dataset matching the corresponding model in `caret_list`.
-#' @param drop_redundant_class A boolean controlling whether to exclude the first class level from prediction output. Default is `TRUE`.
+#' @param drop_redundant_class Logical, whether to exclude the first class level from prediction output. Default is `TRUE`.
 #' @param ... Additional arguments to pass to `caret::predict`
 #' @return A `data.table::data.table` of predictions
-#' @export
+#' @examples
+#' # Load example data and pre-trained caret_stack object
+#' data(heart_failure_datasets)
+#' data(heart_failure_stack)
+#'
+#' # Extract the caret_list object from the caret_stack
+#' base_models <- heart_failure_stack$caret_list
+#'
+#' # List of datasets to predict on
+#' data_list <- heart_failure_datasets[c("cells", "holter", "mrna", "proteins")]
+#'
+#' predict(base_models, data_list)
+#' @exportS3Method
 predict.caret_list <- function(
     object,
     data_list,
@@ -211,20 +222,28 @@ predict.caret_list <- function(
   full_matrix
 }
 
-#' @title Out-of-fold predictions from a caret_list
+#' @title Out-of-fold predictions from a `caret_list`
 #' @description Retrieve the out-of-fold predictions corresponding to the best
-#'   hyperparameter setting of a trained caret model. These predictions come from
+#'   hyperparameter setting of the trained caret models. These predictions come from
 #'   the resampling process (not the final refit) and can optionally be aggregated
 #'   across resamples to produce a single prediction per training instance.
-#'   TODO touch up description
 #' @param object A `caret_list` object
-#' @param drop_redundant_class A boolean controlling whether to exclude the first class level from prediction output. Default is `TRUE`.
-#' @param aggregate_resamples Logical, whether to aggregate resamples across folds.
-#' @param intersection_only Logical, whether to trim down the out of fold predictions to only the intersection of
-#' samples that have data in all datasets.
+#' @param drop_redundant_class Logical, whether to exclude the first class level from prediction output. Default is `TRUE`.
+#' @param aggregate_resamples Logical, whether to aggregate resamples across folds. Default is `TRUE`.
+#' @param intersection_only Logical, whether to trim down the out-of-fold predictions to only the intersection of
+#' samples that are present across all models in the list (i.e., the intersection of training indices used during resampling).
+#' Default is `TRUE`.
 #' @param ... Not used. Included for S3 compatibility.
-#' @return A `data.table::data.table` of OOF predictions
-#' @export
+#' @return A `data.table::data.table` of out-of-fold predictions, with samples as rows and predictions as columns.
+#' @examples
+#' # Load pre-trained example caret_stack object
+#' data(heart_failure_stack)
+#'
+#' # Extract the caret_list object from the caret_stack
+#' base_models <- heart_failure_stack$caret_list
+#'
+#' oof_predictions(base_models)
+#' @exportS3Method
 oof_predictions.caret_list <- function(
     object,
     drop_redundant_class = TRUE,
@@ -292,7 +311,15 @@ oof_predictions.caret_list <- function(
 #' @param object a `caret_list` object
 #' @param ... Not used. Included for S3 compatibility.
 #' @return A `data.table` with tunes and metrics from each model.
-#' @export
+#' @examples
+#' # Load pre-trained caret_list object from package data
+#' data(regression_stack)
+#' models <- regression_stack$caret_list
+#'
+#' # Models is a caret_stack object made with 7 datasets, using a GLMNET method,
+#' # 5-fold cross validation, tuned over a grid of alpha and lambda
+#' summary(models)
+#' @exportS3Method
 summary.caret_list <- function (object, ...) {
 
   caret_list <- object
