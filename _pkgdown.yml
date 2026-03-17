@@ -1,6 +1,9 @@
 url: https://compbio-lab.github.io/caretMultimodal/
 template:
   bootstrap: 5
+  bslib:
+    navbar-padding-y: 0.5rem
+    bootswatch: materia
 
 reference:
   - title: Constructor and methods for `caret_list`

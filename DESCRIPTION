@@ -1,6 +1,6 @@
 Package: caretMultimodal
 Title: Multimodal Late Fusion in R
-Version: 1.0
+Version: 1.0.0
 Authors@R: 
     c(
         person("Josh", "Dyce", , "jpdyce@gmail.com", role = c("aut", "cre")),

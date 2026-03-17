@@ -4,6 +4,7 @@
 #' @param object A `caret_list` or `caret_stack` object
 #' @param ... Additional arguments passed to class-specific methods
 #' @export
+#' @noRd
 oof_predictions <- function(object, ...) {
   UseMethod("oof_predictions")
 }
@@ -12,6 +13,7 @@ oof_predictions <- function(object, ...) {
 #' @param object A `caret_stack` object
 #' @param ... Additional arguments passed to class-specific methods
 #' @export
+#' @noRd
 plot_roc <- function(object, ...) {
   UseMethod("plot_roc")
 }
@@ -20,6 +22,7 @@ plot_roc <- function(object, ...) {
 #' @param object A `caret_stack` object
 #' @param ... Additional arguments passed to class-specific methods
 #' @export
+#' @noRd
 compute_metric <- function(object, ...) {
   UseMethod("compute_metric")
 }
@@ -28,6 +31,7 @@ compute_metric <- function(object, ...) {
 #' @param object A `caret_stack` object
 #' @param ... Additional arguments passed to class-specific methods
 #' @export
+#' @noRd
 plot_metric <- function(object, ...) {
   UseMethod("plot_metric")
 }
@@ -36,6 +40,7 @@ plot_metric <- function(object, ...) {
 #' @param object A `caret_stack` object
 #' @param ... Additional arguments passed to class-specific methods
 #' @export
+#' @noRd
 compute_model_contributions <- function(object, ...) {
   UseMethod("compute_model_contributions")
 }
@@ -44,6 +49,7 @@ compute_model_contributions <- function(object, ...) {
 #' @param object A `caret_stack` object
 #' @param ... Additional arguments passed to class-specific methods
 #' @export
+#' @noRd
 plot_model_contributions <- function(object, ...) {
   UseMethod("plot_model_contributions")
 }
@@ -52,6 +58,7 @@ plot_model_contributions <- function(object, ...) {
 #' @param object A `caret_stack` object
 #' @param ... Additional arguments passed to class-specific methods
 #' @export
+#' @noRd
 compute_ablation <- function(object, ...) {
   UseMethod("compute_ablation")
 }
@@ -60,6 +67,7 @@ compute_ablation <- function(object, ...) {
 #' @param object A `caret_stack` object
 #' @param ... Additional arguments passed to class-specific methods
 #' @export
+#' @noRd
 plot_ablation <- function(object, ...) {
   UseMethod("plot_ablation")
 }
@@ -68,6 +76,7 @@ plot_ablation <- function(object, ...) {
 #' @param object A `caret_stack` object
 #' @param ... Additional arguments passed to class-specific methods
 #' @export
+#' @noRd
 compute_feature_contributions <- function(object, ...) {
   UseMethod("compute_feature_contributions")
 }
@@ -76,6 +85,7 @@ compute_feature_contributions <- function(object, ...) {
 #' @param object A `caret_stack` object
 #' @param ... Additional arguments passed to class-specific methods
 #' @export
+#' @noRd
 plot_feature_contributions <- function(object, ...) {
   UseMethod("plot_feature_contributions")
 }
