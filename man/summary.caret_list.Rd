@@ -18,11 +18,11 @@ A \code{data.table} with tunes and metrics from each model.
 Provide a summary of the best tuning parameters and resampling metrics for all the \code{caret_list} models.
 }
 \examples{
-# Load pre-trained caret_list object from package data
-data(regression_stack)
-models <- regression_stack$caret_list
+# Load pre-trained example caret_stack object
+data(heart_failure_stack)
 
-# Models is a caret_stack object made with 7 datasets, using a GLMNET method,
-# 5-fold cross validation, tuned over a grid of alpha and lambda
-summary(models)
+# Extract the caret_list object from the caret_stack
+base_models <- heart_failure_stack$caret_list
+
+summary(base_models)
 }

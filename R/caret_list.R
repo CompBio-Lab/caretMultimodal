@@ -312,13 +312,13 @@ oof_predictions.caret_list <- function(
 #' @param ... Not used. Included for S3 compatibility.
 #' @return A `data.table` with tunes and metrics from each model.
 #' @examples
-#' # Load pre-trained caret_list object from package data
-#' data(regression_stack)
-#' models <- regression_stack$caret_list
+#' # Load pre-trained example caret_stack object
+#' data(heart_failure_stack)
 #'
-#' # Models is a caret_stack object made with 7 datasets, using a GLMNET method,
-#' # 5-fold cross validation, tuned over a grid of alpha and lambda
-#' summary(models)
+#' # Extract the caret_list object from the caret_stack
+#' base_models <- heart_failure_stack$caret_list
+#'
+#' summary(base_models)
 #' @exportS3Method
 summary.caret_list <- function (object, ...) {
 
