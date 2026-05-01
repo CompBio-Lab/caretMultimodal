@@ -1,0 +1,65 @@
+---
+title: "Binary Classification"
+description: "Example workflow predicting hospitalization using multimodal heart failure data."
+---
+
+This example shows a binary classification workflow for predicting hospitalization from multimodal heart failure data using `caretMultimodal`. The workflow covers loading the data, training modality-specific models and a stacked ensemble, and evaluating performance with ROC curves, contribution plots, and ablation analysis. The default settings on 5-fold cross validation are used to evaluate model performance.
+
+
+# Load the data
+
+The dataset used in this example is included in the `caretMultimodal` package. 
+
+```{r}
+set.seed(123L)
+
+# Load the data
+data("heart_failure_datasets", package = "caretMultimodal")
+
+# Inspect the available modalities
+vapply(heart_failure_datasets, dim, integer(2))
+
+# Grab the target column and drop the demo dataset
+hospitalizations <- heart_failure_datasets$demo$hospitalizations
+heart_failure_datasets$demo <- NULL
+```
+
+# Train models
+
+```{r}
+# Set up hyperparameter tuning grid
+alphas <- c(0.7, 0.775, 0.850, 0.925, 1)
+lambdas <- seq(0.001, 0.1, by = 0.01)
+tuneGrid <- expand.grid(alpha = alphas, lambda = lambdas)
+
+# Train the base models
+heart_models <- caretMultimodal::caret_list(
+  target = hospitalizations,
+  data_list = heart_failure_datasets,
+  method = "glmnet",
+  tuneGrid = tuneGrid
+)
+
+# Train the ensemble model
+heart_stack <- caretMultimodal::caret_stack(
+    caret_list = heart_models,
+    method = "glmnet",
+    tuneGrid = tuneGrid
+)
+
+```
+# Evaluate Performance
+
+```{r}
+summary(heart_stack)
+caretMultimodal::plot_roc(heart_stack)
+caretMultimodal::plot_model_contributions(heart_stack)
+caretMultimodal::plot_feature_contributions(heart_stack)
+
+metric_fun <- function(preds, target) {
+  pROC::roc(response = target, predictor = preds, quiet = TRUE)$auc
+}
+
+caretMultimodal::plot_metric(heart_stack, metric_fun = metric_fun, metric_name = "AUROC")
+caretMultimodal::plot_ablation(heart_stack, metric_fun = metric_fun, metric_name = "AUROC")
+```

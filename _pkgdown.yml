@@ -5,6 +5,13 @@ template:
     navbar-padding-y: 0.5rem
     bootswatch: materia
 
+articles:
+  - title: Examples
+    contents:
+      - heart_failure
+      - pregnancy
+      - single_cell_htr
+
 reference:
   - title: Constructor and methods for `caret_list`
     contents:
