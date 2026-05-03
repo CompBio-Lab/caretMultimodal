@@ -20,7 +20,8 @@ Suggests:
     randomForest,
     glmnet,
     doParallel,
-    archive
+    archive,
+    SeuratObject
 Imports:
     caret,
     data.table,
