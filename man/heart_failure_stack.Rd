@@ -5,7 +5,7 @@
 \alias{heart_failure_stack}
 \title{Pre-trained \code{caret_stack} on Heart Failure Datasets}
 \format{
-An object of class \code{caret_stack} of length 2.
+A \code{caret_stack} object
 }
 \usage{
 heart_failure_stack
