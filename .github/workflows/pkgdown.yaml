@@ -44,10 +44,10 @@ jobs:
             any::muscat
             any::edgeR
             any::matrixStats
-            Bioc::S4Vectors
-            Bioc::SingleCellExperiment
-            Bioc::SummarizedExperiment
-            Bioc::MultiAssayExperiment
+            any::S4Vectors
+            any::SingleCellExperiment
+            any::SummarizedExperiment
+            any::MultiAssayExperiment
             local::.
           needs: website
 
