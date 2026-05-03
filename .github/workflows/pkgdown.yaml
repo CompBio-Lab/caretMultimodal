@@ -33,7 +33,22 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, local::.
+          extra-packages: |
+            any::pkgdown
+            any::curl
+            any::archive
+            any::pROC
+            any::caret
+            any::dplyr
+            any::ggplot2
+            any::muscat
+            any::edgeR
+            any::matrixStats
+            Bioc::S4Vectors
+            Bioc::SingleCellExperiment
+            Bioc::SummarizedExperiment
+            Bioc::MultiAssayExperiment
+            local::.
           needs: website
 
       - name: Build site
