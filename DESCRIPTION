@@ -19,7 +19,8 @@ Suggests:
     testthat (>= 3.0.0),
     randomForest,
     glmnet,
-    doParallel
+    doParallel,
+    archive
 Imports:
     caret,
     data.table,
