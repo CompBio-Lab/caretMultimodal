@@ -1,4 +1,90 @@
 ---
-title: "Regression"
+title: "Regression Using Pregnancy Datasets"
 description: "Example workflow predicting gestational age using 7 related datasets."
 ---
+
+This example shows a regression workflow for predicting gestational age from multimodal pregnancy data using caretMultimodal. The workflow covers downloading and preprocessing seven paired omics assays, training modality-specific elastic net models and a stacked ensemble under leave-one-subject-out cross-validation, and evaluating performance with Spearman correlation, contribution plots, and ablation analysis.
+
+# Load and preprocess the data
+
+```{r load-and-preprocess, cache = TRUE}
+# Download the data
+url <- "https://nalab.stanford.edu/wp-content/uploads/termpregnancymultiomics.zip"
+buf <- curl::curl_fetch_memory(url)$content
+load(archive::archive_read(rawConnection(buf), file = "termpregnancymultiomics/Data.Rda"))
+
+# Name the input data
+names(InputData) <- c("Cellfree RNA", "Plasma Luminex", "Serum Luminex", "Microbiome", "Immune System", "Metabolomics", "Plasma Somalogic")
+
+# Correct nonstandard feature names
+InputData <- lapply(InputData, function(df) {
+  df <- as.data.frame(df)
+  names(df) <- make.names(iconv(names(df), from = "latin1", to = "UTF-8", sub = ""), unique = TRUE)
+  df
+})
+
+names(InputData$Metabolomics) <- paste("Metabolomic Feature", seq_along(names(InputData$Metabolomics)))
+
+# Remove postpartum samples
+postpartum_indices <- which(featureweeks < 0)
+InputData <- lapply(InputData, function(x) x[-postpartum_indices, ])
+featurepatients <- featurepatients[-postpartum_indices]
+featureweeks <- featureweeks[-postpartum_indices]
+
+```
+
+# Train models with caretMultimodal
+
+```{r train-models, cache = TRUE}
+set.seed(42L)
+
+# Define hyperparameter tuning grid
+alphas <- seq(0, 1, 0.1)
+lambdas <- seq(0, 12, by = 0.5)
+tuneGrid <- expand.grid(alpha = alphas, lambda = lambdas)
+
+# Set up leave-one-subject out cross validation
+loso_folds <- lapply(unique(featurepatients), function(p) {
+  which(featurepatients != p)  # indices of all samples NOT in this patient
+})
+ 
+trControl <- caret::trainControl(
+  method = "cv",
+  index = loso_folds,
+  savePredictions = "final",
+  summaryFunction = caret::defaultSummary
+)
+ 
+# Train the base models
+pregnancy_models <- caretMultimodal::caret_list(
+  data_list = InputData,
+  target = featureweeks,
+  method = "glmnet",
+  tuneGrid = tuneGrid,
+  trControl = trControl,
+  trim = FALSE
+)
+ 
+# Train the ensemble model
+pregnancy_stack <- caretMultimodal::caret_stack(
+  pregnancy_models,
+  method = "glmnet",
+  tuneGrid = tuneGrid,
+  trControl = trControl
+)
+```
+
+# Evaluate and Interpret
+
+```{r}
+summary(pregnancy_stack)
+caretMultimodal::plot_model_contributions(pregnancy_stack)
+caretMultimodal::plot_feature_contributions(pregnancy_stack)
+
+metric_fun <- function(preds, target) {
+  -log10(cor.test(preds, target, method = "spearman")$p.value)
+}
+
+caretMultimodal::plot_metric(pregnancy_stack, metric_fun = metric_fun, metric_name = "-log(p-val)")
+caretMultimodal::plot_ablation(pregnancy_stack, metric_fun = metric_fun, metric_name = "-log(p-val)")
+```

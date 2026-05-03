@@ -684,7 +684,10 @@ plot_ablation.caret_stack <- function(
     ggplot2::geom_bar(stat = "identity") +
     ggplot2::labs(title = "Ablation Analysis", x = "Iteration", y = metric_name) +
     ggplot2::theme_bw(base_size = 14) +
-    ggplot2::theme(plot.title   = ggplot2::element_text(hjust = 0.5)) +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(hjust = 0.5),
+      axis.text.x  = ggplot2::element_text(angle = 45, vjust = 1, hjust = 1, size = 14)
+    ) +
     ggplot2::scale_fill_manual(values = attr(object, "model_colors"))
 }
 
@@ -782,7 +785,7 @@ plot_feature_contributions.caret_stack <- function(
       legend.justification = c(0.95, 0.95),
       legend.background = ggplot2::element_rect(fill = "white", color = "black"),
       plot.title = ggplot2::element_text(hjust = 0.5),
-      axis.text.x = ggplot2::element_text(angle = 90, hjust = 0.5, vjust = 0.5)
+      axis.text.x = ggplot2::element_text(angle = 45, hjust = 1, vjust = 1)
     ) +
     ggplot2::scale_fill_manual(values = attr(object, "model_colors"))
 }

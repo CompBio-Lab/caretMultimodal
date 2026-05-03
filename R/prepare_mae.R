@@ -12,10 +12,10 @@ prepare_mae <- function(
     transpose = FALSE,
     ...) {
 
-  exp_list <- experiments(mae)
+  exp_list <- MultiAssayExperiment::experiments(mae)
 
   data_list <- lapply(exp_list, function(se) {
-    if (transpose) t(assay(se)) else assay(se)
+    if (transpose) t(MultiAssayExperiment::assay(se)) else MultiAssayExperiment::assay(se)
   })
 
   data_list

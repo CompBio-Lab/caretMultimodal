@@ -6,3 +6,4 @@
 .quarto
 examples
 docs
+vignettes/*_cache

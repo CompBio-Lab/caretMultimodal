@@ -1,5 +1,5 @@
 ---
-title: "Binary Classification"
+title: "Binary Classification Using Heart Failure Datasets"
 description: "Example workflow predicting hospitalization using multimodal heart failure data."
 ---
 
@@ -24,7 +24,7 @@ hospitalizations <- heart_failure_datasets$demo$hospitalizations
 heart_failure_datasets$demo <- NULL
 ```
 
-# Train models
+# Train models with caretMultimodal
 
 ```{r}
 # Set up hyperparameter tuning grid
@@ -48,7 +48,7 @@ heart_stack <- caretMultimodal::caret_stack(
 )
 
 ```
-# Evaluate Performance
+# Evaluate and Interpret
 
 ```{r}
 summary(heart_stack)

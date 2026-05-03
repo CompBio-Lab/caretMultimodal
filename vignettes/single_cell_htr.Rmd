@@ -1,5 +1,294 @@
 ---
-title: "Single cell"
-description: "A more novel approach for generating multimodal data from scRNA-seq reads."
+title: "Spatial Transcriptomics Heart Transplant Rejection Modeling"
+description: "Construct multimodal pseudobulk views from Xenium spatial transcriptomics for modeling with caretMultimodal."
 ---
 
+This vignette demonstrates a preprocessing workflow for deriving multimodal sample-level views from spatial single-cell transcriptomics data and using them with `caretMultimodal`. 
+
+Starting from Xenium heart transplant biopsy data from GEO (GSE290577), we aggregate single-cell expression into pseudobulk profiles stratified by cell type and sample, normalize each view independently, and assemble the result into a MultiAssayExperiment suitable for multimodal modeling. The resulting object can be used directly with caretMultimodal to train modality-specific learners and stacked ensembles. For simplicity, the modeling example shown here focuses on a binary classification task comparing ellular versus antibody mediated rejection.
+
+# Load and Preprocess the data
+
+### Collect the data from GEO
+```{r download-data, cache=TRUE}
+# Load the xenium data (takes a minute or two)
+xenium_url <- "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE290nnn/GSE290577/suppl/GSE290577_heart_spatial.rds"
+xenium_raw <- curl::curl_fetch_memory(xenium_url)$content
+xenium_obj <- unserialize(xenium_raw)
+print(xenium_obj)
+
+# Load the metadata
+meta_url <- "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE290nnn/GSE290577/suppl/GSE290577_heart_spatial_metadata.txt.gz"
+meta_raw <- curl::curl_fetch_memory(meta_url)$content
+meta_df <- read.delim(
+    text = rawToChar(memDecompress(meta_raw, type = "gzip")),
+    sep = "\t",
+    header = TRUE,
+    stringsAsFactors = FALSE
+  )
+# Restrict to pre-biopsy, non-mixed rejection samples
+meta_df <- meta_df |>
+  dplyr::filter(biopsy_timing == "pre") |>
+  dplyr::filter(biopsy_rejection_type != "mixed_rejection") |>
+  dplyr::arrange(patient_id)
+
+head(meta_df)
+```
+
+### Prepare cell-level metadata and count matrix
+
+```{r prepare-inputs}
+# Extract per-cell metadata and restrict to retained samples
+cell_meta <- xenium_obj@meta.data |>
+  dplyr::filter(Sample %in% meta_df$Sample)
+
+# Standardize fields required by muscat
+cell_meta <- cell_meta |>
+  dplyr::mutate(
+    response = biopsy_rejection_type,
+    id = Sample,
+    group = patient_id,
+    sample_id = Sample,
+    cluster_id = ct_second_pass
+  )
+
+# Extract raw counts (genes x cells), aligned to filtered metadata
+rna_counts <- xenium_obj@assays$RNA@counts[, rownames(cell_meta), drop = FALSE]
+```
+
+### Construct SingleCellExperiment
+
+```{r make-sce}
+sce_rna <- SingleCellExperiment::SingleCellExperiment(
+  assays = list(counts = rna_counts),
+  colData = S4Vectors::DataFrame(cell_meta)
+)
+
+sce_rna
+```
+
+### Pseudobulk by cell type and sample with Muscat
+
+```{r pseudobulk}
+pb_rna <- muscat::aggregateData(
+  sce_rna,
+  assay = "counts",
+  fun = "sum",
+  by = c("cluster_id", "sample_id")
+)
+
+pb_rna
+```
+
+### Normalize pseudobulk assays (TMM + logCPM)
+
+```{r normalize}
+for (assay_name in SummarizedExperiment::assayNames(pb_rna)) {
+  mat <- SummarizedExperiment::assay(pb_rna, assay_name)
+  lib_size <- colSums(mat)
+
+  keep_samples <- lib_size > 0
+
+  norm_mat <- matrix(
+    0,
+    nrow = nrow(mat),
+    ncol = ncol(mat),
+    dimnames = dimnames(mat)
+  )
+
+  if (sum(keep_samples) >= 2) {
+    dge <- edgeR::DGEList(counts = mat[, keep_samples, drop = FALSE])
+    dge <- edgeR::calcNormFactors(dge, method = "TMM")
+
+    norm_mat[, keep_samples] <- edgeR::cpm(
+      dge,
+      log = TRUE,
+      prior.count = 0.5
+    )
+  }
+
+  SummarizedExperiment::assay(pb_rna, paste0(assay_name, "_logCPM")) <- norm_mat
+}
+
+pb_rna_norm <- pb_rna
+pb_rna_norm
+```
+
+### Convert to MultiAssayExperiment
+
+```{r build-mae}
+# Identify normalized assays
+log_assays <- grep("_logCPM$", SummarizedExperiment::assayNames(pb_rna_norm), value = TRUE)
+
+# Sample-level metadata
+sample_meta <- as.data.frame(SummarizedExperiment::colData(pb_rna_norm))
+rownames(sample_meta) <- colnames(pb_rna_norm)
+sample_meta <- S4Vectors::DataFrame(sample_meta)
+
+# Build one SummarizedExperiment per cell type
+se_list <- lapply(log_assays, function(assay_name) {
+  mat <- SummarizedExperiment::assay(pb_rna_norm, assay_name)
+
+  keep_genes <- matrixStats::rowVars(mat, na.rm = TRUE)
+  keep_genes <- is.finite(keep_genes) & keep_genes > 0
+  mat <- mat[keep_genes, , drop = FALSE]
+
+  SummarizedExperiment::SummarizedExperiment(
+    assays = list(logCPM = mat),
+    colData = sample_meta[colnames(mat), , drop = FALSE]
+  )
+})
+
+names(se_list) <- sub("_logCPM$", "", log_assays)
+
+# Map assay columns to primary sample IDs
+sample_map <- do.call(rbind, lapply(names(se_list), function(exp_name) {
+  sample_ids <- colnames(se_list[[exp_name]])
+
+  data.frame(
+    assay = exp_name,
+    primary = sample_ids,
+    colname = sample_ids,
+    stringsAsFactors = FALSE
+  )
+}))
+
+# Construct MAE
+mae_pb <- MultiAssayExperiment::MultiAssayExperiment(
+  experiments = MultiAssayExperiment::ExperimentList(se_list),
+  colData = sample_meta,
+  sampleMap = sample_map
+)
+
+mae_pb
+```
+
+### Summarize and filter low-coverage experiments
+
+```{r experiment-filter}
+# Extract sample-level response labels from the MAE
+response_vec <- SummarizedExperiment::colData(mae_pb)$response
+names(response_vec) <- rownames(SummarizedExperiment::colData(mae_pb))
+response_levels <- sort(unique(as.character(response_vec)))
+
+# Minimum number of nonzero samples required per response group
+min_samples <- 15
+
+# Count nonzero-library samples in each response group for every assay
+experiment_summary <- lapply(names(MultiAssayExperiment::experiments(mae_pb)), function(exp_name) {
+  se <- MultiAssayExperiment::experiments(mae_pb)[[exp_name]]
+  lib_size <- colSums(SummarizedExperiment::assay(se, "logCPM"))
+
+  nonzero_samples <- names(lib_size)[lib_size > 0]
+  nonzero_tab <- table(factor(response_vec[nonzero_samples], levels = response_levels))
+
+  data.frame(
+    experiment = exp_name,
+    response = response_levels,
+    n_nonzero_lib = as.integer(nonzero_tab),
+    stringsAsFactors = FALSE
+  )
+}) |>
+  dplyr::bind_rows()
+
+# Retain assays with at least min_samples nonzero samples in every response group
+keep_names <- experiment_summary |>
+  dplyr::group_by(experiment) |>
+  dplyr::summarise(keep = all(n_nonzero_lib >= min_samples), .groups = "drop") |>
+  dplyr::filter(keep) |>
+  dplyr::pull(experiment)
+
+# Subset the MAE to retained assays
+mae_pb_keep <- mae_pb[, , keep_names]
+
+mae_pb_keep
+```
+
+### Visualize per-assay logCPM distributions
+
+```{r plot-distributions}
+plot_df <- lapply(names(MultiAssayExperiment::experiments(mae_pb_keep)), function(exp_name) {
+  mat <- SummarizedExperiment::assay(
+    MultiAssayExperiment::experiments(mae_pb_keep)[[exp_name]],
+    "logCPM"
+  )
+
+  data.frame(
+    value = as.vector(mat),
+    experiment = exp_name
+  )
+}) |>
+  dplyr::bind_rows()
+
+ggplot2::ggplot(plot_df, ggplot2::aes(x = value)) +
+  ggplot2::geom_histogram(bins = 50) +
+  ggplot2::facet_wrap(~ experiment, scales = "free") +
+  ggplot2::theme_bw() +
+  ggplot2::theme(
+    strip.text = ggplot2::element_text(size = 8),
+    axis.text = ggplot2::element_text(size = 6)
+  )
+```
+
+# Train models with caretMultimodal
+
+There are several ways to model this data. For simplicity, this example uses a binary classification task comparing cellular versus antibody mediated rejection (ignoring subjects with no rejection).
+
+```{r train-models, cache=TRUE}
+set.seed(42L)
+
+data_list <- caretMultimodal::prepare_mae(mae_pb_keep, transpose = TRUE)
+
+# caretMultimodal currently expects syntactically safe view names
+view_labels <- names(data_list)
+view_names <- make.names(view_labels, unique = TRUE)
+names(data_list) <- view_names
+
+# Restrict to AMR vs CMR samples
+responses <- factor(trimws(SummarizedExperiment::colData(mae_pb_keep)$response))
+keep <- responses %in% c("antibody_rejection", "cellular_rejection")
+
+data_list <- lapply(data_list, function(x) x[keep, , drop = FALSE])
+response_subset <- droplevels(responses[keep])
+
+# Elastic net hyperparameter grid
+tuneGrid <- expand.grid(
+  alpha = seq(0, 1, by = 0.1),
+  lambda = 10^seq(-4, 1, length.out = 50)
+)
+
+# Repeated cross-validation
+trControl <- caret::trainControl(
+  method = "repeatedcv",
+  number = 5,
+  repeats = 5,
+  savePredictions = "final",
+  classProbs = TRUE,
+  summaryFunction = caret::twoClassSummary
+)
+
+# Train base models
+htr_models <- caretMultimodal::caret_list(
+  target = response_subset,
+  data_list = data_list,
+  method = "glmnet",
+  tuneGrid = tuneGrid,
+  trControl = trControl
+)
+
+# Train stacked ensemble
+htr_stack <- caretMultimodal::caret_stack(
+  caret_list = htr_models,
+  method = "glmnet",
+  tuneGrid = tuneGrid,
+  trControl = trControl
+)
+```
+# Evaluate Models
+
+```{r evaluate-models}
+summary(htr_stack)
+caretMultimodal::plot_roc(htr_stack)
+caretMultimodal::plot_model_contributions(htr_stack)
+caretMultimodal::plot_feature_contributions(htr_stack)
+```
