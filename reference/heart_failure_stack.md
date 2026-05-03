@@ -11,7 +11,7 @@ heart_failure_stack
 
 ## Format
 
-An object of class `caret_stack` of length 2.
+A `caret_stack` object
 
 ## See also
 

@@ -37,6 +37,7 @@ Full API documentation is available at
 The package can be installed using devtools
 
 ``` r
+
 devtools::install_github("CompBio-Lab/caretMultimodal")
 ```
 
