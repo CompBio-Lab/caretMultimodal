@@ -135,12 +135,6 @@ sce_rna <- SingleCellExperiment::SingleCellExperiment(
   assays = list(counts = rna_counts),
   colData = S4Vectors::DataFrame(cell_meta)
 )
-```
-
-    ## Warning: replacing previous import 'S4Arrays::makeNindexFromArrayViewport' by
-    ## 'DelayedArray::makeNindexFromArrayViewport' when loading 'SummarizedExperiment'
-
-``` r
 
 sce_rna
 ```
