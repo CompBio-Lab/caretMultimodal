@@ -111,7 +111,7 @@ caret_stack <- function(
   model_names <- names(caret_list)
 
   # This sets the color palette or all the visualizations
-  model_colors <- setNames(
+  model_colors <- stats::setNames(
     viridis::viridis(length(model_names) + 1),
     c(model_names, "ensemble")
   )
@@ -775,7 +775,7 @@ plot_feature_contributions.caret_stack <- function(
   plot_data[, Feature_id := paste0(Feature, "_", Model)]
 
   ggplot2::ggplot(plot_data,
-    ggplot2::aes(x = reorder(Feature_id, -`Relative Contribution`), y = `Relative Contribution`, fill = Model)) +
+    ggplot2::aes(x = stats::reorder(Feature_id, -`Relative Contribution`), y = `Relative Contribution`, fill = Model)) +
     ggplot2::geom_bar(stat = "identity") +
     ggplot2::scale_x_discrete(labels = plot_data$Feature) +
     ggplot2::labs(title = "Feature Contributions to Ensemble Model", x = "Feature", y = "Relative Contribution (%)") +
