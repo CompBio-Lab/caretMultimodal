@@ -19,7 +19,7 @@ A \code{ggplot2} object
 \description{
 This function calculates ROC curves for all base models and the ensemble model
 using the out-of-fold predictions from a \code{caret_stack} object.
-The \code{pROC} package is used to compute the ROC curves. ROC curves can only be constructed for binary calssifiers.
+The \code{pROC} package is used to compute the ROC curves. ROC curves can only be constructed for binary classifiers.
 }
 \examples{
 # Load pre-trained example caret_stack object

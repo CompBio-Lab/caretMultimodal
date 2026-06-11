@@ -292,7 +292,7 @@ summary.caret_stack <- function(object, ...) {
 #' @title Plot ROC curves for individual and ensemble models in a caret_stack
 #' @description This function calculates ROC curves for all base models and the ensemble model
 #' using the out-of-fold predictions from a `caret_stack` object.
-#' The `pROC` package is used to compute the ROC curves. ROC curves can only be constructed for binary calssifiers.
+#' The `pROC` package is used to compute the ROC curves. ROC curves can only be constructed for binary classifiers.
 #'
 #' @param object A `caret_stack` object
 #' @param include_auc Whether to include AUC values in the legend. Default is `True`.
