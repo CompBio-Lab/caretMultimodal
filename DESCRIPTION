@@ -18,9 +18,7 @@ RoxygenNote: 7.3.3
 Suggests: 
     testthat (>= 3.0.0),
     randomForest,
-    doParallel,
-    archive,
-    SeuratObject
+    doParallel
 Imports:
     caret,
     data.table,

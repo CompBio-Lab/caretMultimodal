@@ -10,7 +10,6 @@ articles:
     contents:
       - heart_failure
       - pregnancy
-      - single_cell_htr
 
 reference:
   - title: Constructor and methods for `caret_list`
