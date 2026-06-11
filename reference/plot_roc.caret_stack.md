@@ -3,7 +3,7 @@
 This function calculates ROC curves for all base models and the ensemble
 model using the out-of-fold predictions from a `caret_stack` object. The
 `pROC` package is used to compute the ROC curves. ROC curves can only be
-constructed for binary calssifiers.
+constructed for binary classifiers.
 
 ## Usage
 
