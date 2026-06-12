@@ -6,11 +6,11 @@ Authors@R:
         person("Josh", "Dyce", , "jpdyce@gmail.com", role = c("aut", "cre")),
         person("Amrit", "Singh", role = c("aut"))
     )
-Description: `caretMultimodal` extends the `caret` framework to support late fusion workflows in R,
+Description: Extends the 'caret' framework to support late fusion workflows in R,
     enabling users to train models independently across multiple data modalities and combine their
     predictions into a single meta-model. Designed for R developers, data scientists, and 
-    biomedical researchers alike, `caretMultimodal` aims to make late fusion ensemble modelling
-    as accessible and flexible as single-dataset workflows in `caret`.
+    biomedical researchers alike, 'caretMultimodal' aims to make late fusion ensemble modelling
+    as accessible and flexible as single-dataset workflows in 'caret'.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

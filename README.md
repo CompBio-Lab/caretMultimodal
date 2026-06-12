@@ -31,7 +31,7 @@ modelling as accessible and flexible as single-dataset workflows in `caret`.
 
 ## Documentation
 
-Full API documentation is available at [compbio-lab.github.io/caretMultimodal](https://compbio-lab.github.io/caretMultimodal)
+Full API documentation is available at [compbio-lab.github.io/caretMultimodal](https://compbio-lab.github.io/caretMultimodal/)
 
 ## Installation
 
