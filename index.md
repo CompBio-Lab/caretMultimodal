@@ -30,7 +30,7 @@ workflow](reference/figures/CV_workflow.png)
 ## Documentation
 
 Full API documentation is available at
-[compbio-lab.github.io/caretMultimodal](https://compbio-lab.github.io/caretMultimodal)
+[compbio-lab.github.io/caretMultimodal](https://compbio-lab.github.io/caretMultimodal/)
 
 ## Installation
 
