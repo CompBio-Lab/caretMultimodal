@@ -3,6 +3,12 @@
 on:
   push:
     branches: [main, master]
+    paths:
+      - 'R/**'
+      - 'tests/**'
+      - 'DESCRIPTION'
+      - 'NAMESPACE'
+      - 'data/**'
   pull_request:
 
 name: R-CMD-check
