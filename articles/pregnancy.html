@@ -125,38 +125,23 @@ Spearman correlation, contribution plots, and ablation analysis.</p>
 <span>  tuneGrid <span class="op">=</span> <span class="va">tuneGrid</span>,</span>
 <span>  trControl <span class="op">=</span> <span class="va">trControl</span>,</span>
 <span>  trim <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Loading required package: ggplot2</span></span></code></pre>
-<pre><code><span><span class="co">## Loading required package: lattice</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,</span></span>
-<span><span class="co">## : There were missing values in resampled performance measures.</span></span>
-<span><span class="co">## Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,</span></span>
-<span><span class="co">## : There were missing values in resampled performance measures.</span></span>
-<span><span class="co">## Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,</span></span>
-<span><span class="co">## : There were missing values in resampled performance measures.</span></span>
-<span><span class="co">## Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,</span></span>
-<span><span class="co">## : There were missing values in resampled performance measures.</span></span>
-<span><span class="co">## Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,</span></span>
-<span><span class="co">## : There were missing values in resampled performance measures.</span></span>
-<span><span class="co">## Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,</span></span>
-<span><span class="co">## : There were missing values in resampled performance measures.</span></span>
-<span><span class="co">## Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,</span></span>
-<span><span class="co">## : There were missing values in resampled performance measures.</span></span></code></pre>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Train the ensemble model</span></span>
+<span><span class="op">)</span></span>
+<span> </span>
+<span><span class="co"># Train the ensemble model</span></span>
 <span><span class="va">pregnancy_stack</span> <span class="op">&lt;-</span> <span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="../reference/caret_stack.html">caret_stack</a></span><span class="op">(</span></span>
 <span>  <span class="va">pregnancy_models</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"glmnet"</span>,</span>
 <span>  tuneGrid <span class="op">=</span> <span class="va">tuneGrid</span>,</span>
 <span>  trControl <span class="op">=</span> <span class="va">trControl</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,</span></span>
-<span><span class="co">## : There were missing values in resampled performance measures.</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="evaluate-and-interpret">Evaluate and Interpret<a class="anchor" aria-label="anchor" href="#evaluate-and-interpret"></a>
 </h2>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="model-performance">Model performance<a class="anchor" aria-label="anchor" href="#model-performance"></a>
+</h3>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pregnancy_stack</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##               model method alpha lambda     RMSE  Rsquared      MAE   RMSESD</span></span>
 <span><span class="co">##              &lt;char&gt; &lt;char&gt; &lt;num&gt;  &lt;num&gt;    &lt;num&gt;     &lt;num&gt;    &lt;num&gt;    &lt;num&gt;</span></span>
@@ -178,48 +163,161 @@ Spearman correlation, contribution plots, and ablation analysis.</p>
 <span><span class="co">## 6: 0.04075627 1.390273</span></span>
 <span><span class="co">## 7: 0.24339738 1.232796</span></span>
 <span><span class="co">## 8: 0.02707345 1.176519</span></span></code></pre>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_model_contributions.html">plot_model_contributions</a></span><span class="op">(</span><span class="va">pregnancy_stack</span><span class="op">)</span></span></code></pre></div>
-<p><img src="pregnancy_files/figure-html/unnamed-chunk-1-1.png" class="r-plt" alt="" width="700"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_feature_contributions.html">plot_feature_contributions</a></span><span class="op">(</span><span class="va">pregnancy_stack</span><span class="op">)</span></span></code></pre></div>
-<p><img src="pregnancy_files/figure-html/unnamed-chunk-1-2.png" class="r-plt" alt="" width="700"></p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p><strong>Note:</strong> <em>Performance metrics returned by
+<code><a href="../reference/summary.caret_stack.html">summary.caret_stack()</a></code> are the resampling summaries
+generated by <code>caret</code> and may differ from metrics calculated
+from pooled out-of-fold predictions. See
+<code><a href="../reference/compute_metric.caret_stack.html">compute_metric.caret_stack()</a></code> for calculating metrics
+directly from pooled out-of-fold predictions.</em></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">metric_fun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">preds</span>, <span class="va">target</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.test.html" class="external-link">cor.test</a></span><span class="op">(</span><span class="va">preds</span>, <span class="va">target</span>, method <span class="op">=</span> <span class="st">"spearman"</span><span class="op">)</span><span class="op">$</span><span class="va">p.value</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">preds</span> <span class="op">-</span> <span class="va">target</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_metric.html">plot_metric</a></span><span class="op">(</span><span class="va">pregnancy_stack</span>, metric_fun <span class="op">=</span> <span class="va">metric_fun</span>, metric_name <span class="op">=</span> <span class="st">"-log(p-val)"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="pregnancy_files/figure-html/unnamed-chunk-1-3.png" class="r-plt" alt="" width="700"></p>
+<span><span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="../reference/compute_metric.html">compute_metric</a></span><span class="op">(</span></span>
+<span>  <span class="va">pregnancy_stack</span>,</span>
+<span>  metric_fun <span class="op">=</span> <span class="va">metric_fun</span>,</span>
+<span>  metric_name <span class="op">=</span> <span class="st">"RMSE"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##               Model     RMSE</span></span>
+<span><span class="co">##              &lt;char&gt;    &lt;num&gt;</span></span>
+<span><span class="co">## 1:         ensemble 3.065251</span></span>
+<span><span class="co">## 2:     Metabolomics 3.397811</span></span>
+<span><span class="co">## 3: Plasma Somalogic 4.001478</span></span>
+<span><span class="co">## 4:    Immune System 4.856087</span></span>
+<span><span class="co">## 5:   Plasma Luminex 6.516770</span></span>
+<span><span class="co">## 6:     Cellfree RNA 7.891113</span></span>
+<span><span class="co">## 7:    Serum Luminex 8.210961</span></span>
+<span><span class="co">## 8:       Microbiome 8.512699</span></span></code></pre>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_metric.html">plot_metric</a></span><span class="op">(</span></span>
+<span>  <span class="va">pregnancy_stack</span>,</span>
+<span>  metric_fun <span class="op">=</span> <span class="va">metric_fun</span>,</span>
+<span>  metric_name <span class="op">=</span> <span class="st">"RMSE"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="pregnancy_files/figure-html/unnamed-chunk-2-1.png" class="r-plt" alt="" width="700"></p>
+</div>
+<div class="section level3">
+<h3 id="base-model-and-feature-contributions">Base model and feature contributions<a class="anchor" aria-label="anchor" href="#base-model-and-feature-contributions"></a>
+</h3>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="../reference/compute_model_contributions.html">compute_model_contributions</a></span><span class="op">(</span><span class="va">pregnancy_stack</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##               Model Relative Contribution</span></span>
+<span><span class="co">##              &lt;char&gt;                 &lt;num&gt;</span></span>
+<span><span class="co">## 1:     Metabolomics             25.285246</span></span>
+<span><span class="co">## 2: Plasma Somalogic             24.874757</span></span>
+<span><span class="co">## 3:    Serum Luminex             15.742591</span></span>
+<span><span class="co">## 4:       Microbiome             15.616400</span></span>
+<span><span class="co">## 5:    Immune System              9.385203</span></span>
+<span><span class="co">## 6:   Plasma Luminex              6.109482</span></span>
+<span><span class="co">## 7:     Cellfree RNA              2.986322</span></span></code></pre>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_model_contributions.html">plot_model_contributions</a></span><span class="op">(</span><span class="va">pregnancy_stack</span><span class="op">)</span></span></code></pre></div>
+<p><img src="pregnancy_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="700"></p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="../reference/compute_feature_contributions.html">compute_feature_contributions</a></span><span class="op">(</span><span class="va">pregnancy_stack</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##                Model                  Feature Relative Contribution</span></span>
+<span><span class="co">##               &lt;char&gt;                   &lt;char&gt;                 &lt;num&gt;</span></span>
+<span><span class="co">##  1: Plasma Somalogic                 SLC25A18            18.0723947</span></span>
+<span><span class="co">##  2:    Serum Luminex            serum.EOTAXIN            14.4946102</span></span>
+<span><span class="co">##  3:       Microbiome      Saliva_Anaeroglobus             9.0073678</span></span>
+<span><span class="co">##  4:       Microbiome      Stool_Actinomyces.2             3.3268629</span></span>
+<span><span class="co">##  5:   Plasma Luminex           plasma.EOTAXIN             2.7806292</span></span>
+<span><span class="co">##  6:    Immune System                   intMCs             2.5522895</span></span>
+<span><span class="co">##  7: Plasma Somalogic                      F11             1.9678954</span></span>
+<span><span class="co">##  8:       Microbiome             Stool_NA.168             1.5943148</span></span>
+<span><span class="co">##  9: Plasma Somalogic                     KLK7             1.2901194</span></span>
+<span><span class="co">## 10:    Serum Luminex               serum.MCP1             1.2479806</span></span>
+<span><span class="co">## 11:     Metabolomics Metabolomic Feature 1515             1.1777251</span></span>
+<span><span class="co">## 12:     Cellfree RNA                     E2F6             1.0780740</span></span>
+<span><span class="co">## 13:    Immune System    Tbet.CD4.Tcells_naive             1.0451590</span></span>
+<span><span class="co">## 14:     Metabolomics Metabolomic Feature 2545             0.9796715</span></span>
+<span><span class="co">## 15:   Plasma Luminex               plasma.MIG             0.9552108</span></span>
+<span><span class="co">## 16:     Metabolomics  Metabolomic Feature 286             0.9410198</span></span>
+<span><span class="co">## 17:   Plasma Luminex              plasma.TGFA             0.9403460</span></span>
+<span><span class="co">## 18: Plasma Somalogic                     CHKB             0.9087291</span></span>
+<span><span class="co">## 19:     Metabolomics Metabolomic Feature 2626             0.8667525</span></span>
+<span><span class="co">## 20: Plasma Somalogic                    CNTN4             0.8663147</span></span>
+<span><span class="co">##                Model                  Feature Relative Contribution</span></span>
+<span><span class="co">##               &lt;char&gt;                   &lt;char&gt;                 &lt;num&gt;</span></span></code></pre>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_ablation.html">plot_ablation</a></span><span class="op">(</span><span class="va">pregnancy_stack</span>, metric_fun <span class="op">=</span> <span class="va">metric_fun</span>, metric_name <span class="op">=</span> <span class="st">"-log(p-val)"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,</span></span>
-<span><span class="co">## : There were missing values in resampled performance measures.</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in cor.test.default(preds, target, method = "spearman"): cannot compute</span></span>
-<span><span class="co">## exact p-value with ties</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,</span></span>
-<span><span class="co">## : There were missing values in resampled performance measures.</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in cor.test.default(preds, target, method = "spearman"): cannot compute</span></span>
-<span><span class="co">## exact p-value with ties</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,</span></span>
-<span><span class="co">## : There were missing values in resampled performance measures.</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in cor.test.default(preds, target, method = "spearman"): cannot compute</span></span>
-<span><span class="co">## exact p-value with ties</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,</span></span>
-<span><span class="co">## : There were missing values in resampled performance measures.</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in cor.test.default(preds, target, method = "spearman"): cannot compute</span></span>
-<span><span class="co">## exact p-value with ties</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,</span></span>
-<span><span class="co">## : There were missing values in resampled performance measures.</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in cor.test.default(preds, target, method = "spearman"): cannot compute</span></span>
-<span><span class="co">## exact p-value with ties</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,</span></span>
-<span><span class="co">## : There were missing values in resampled performance measures.</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in cor.test.default(preds, target, method = "spearman"): cannot compute</span></span>
-<span><span class="co">## exact p-value with ties</span></span>
-<span><span class="co">## Warning in cor.test.default(preds, target, method = "spearman"): cannot compute</span></span>
-<span><span class="co">## exact p-value with ties</span></span></code></pre>
-<p><img src="pregnancy_files/figure-html/unnamed-chunk-1-4.png" class="r-plt" alt="" width="700"></p>
+<code class="sourceCode R"><span><span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_feature_contributions.html">plot_feature_contributions</a></span><span class="op">(</span><span class="va">pregnancy_stack</span><span class="op">)</span></span></code></pre></div>
+<p><img src="pregnancy_files/figure-html/unnamed-chunk-3-2.png" class="r-plt" alt="" width="700"></p>
+</div>
+<div class="section level3">
+<h3 id="ablation-analysis">Ablation analysis<a class="anchor" aria-label="anchor" href="#ablation-analysis"></a>
+</h3>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Forward ablation</span></span>
+<span><span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="../reference/compute_ablation.html">compute_ablation</a></span><span class="op">(</span></span>
+<span>  <span class="va">pregnancy_stack</span>, </span>
+<span>  metric_fun <span class="op">=</span> <span class="va">metric_fun</span>, </span>
+<span>  metric_name <span class="op">=</span> <span class="st">"RMSE"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##                 Row Ablation_1 Ablation_2 Ablation_3 Ablation_4 Ablation_5</span></span>
+<span><span class="co">##              &lt;char&gt;      &lt;num&gt;      &lt;num&gt;      &lt;num&gt;      &lt;num&gt;      &lt;num&gt;</span></span>
+<span><span class="co">## 1:     Cellfree RNA   2.986322         NA         NA         NA         NA</span></span>
+<span><span class="co">## 2:   Plasma Luminex   6.109482   6.001124         NA         NA         NA</span></span>
+<span><span class="co">## 3:    Serum Luminex  15.742591  16.698123  17.887264  22.000382  28.973279</span></span>
+<span><span class="co">## 4:       Microbiome  15.616400  16.130522  20.676324  16.183171         NA</span></span>
+<span><span class="co">## 5:    Immune System   9.385203   9.842819  11.468707         NA         NA</span></span>
+<span><span class="co">## 6:     Metabolomics  25.285246  26.126223  25.407053  32.831343  37.965888</span></span>
+<span><span class="co">## 7: Plasma Somalogic  24.874757  25.201190  24.560652  28.985104  33.060834</span></span>
+<span><span class="co">## 8:             RMSE   3.065251   2.996606   2.974001   3.017194   2.973132</span></span>
+<span><span class="co">##    Ablation_6 Ablation_7</span></span>
+<span><span class="co">##         &lt;num&gt;      &lt;num&gt;</span></span>
+<span><span class="co">## 1:         NA         NA</span></span>
+<span><span class="co">## 2:         NA         NA</span></span>
+<span><span class="co">## 3:         NA         NA</span></span>
+<span><span class="co">## 4:         NA         NA</span></span>
+<span><span class="co">## 5:         NA         NA</span></span>
+<span><span class="co">## 6:  52.323708 100.000000</span></span>
+<span><span class="co">## 7:  47.676292         NA</span></span>
+<span><span class="co">## 8:   3.184959   3.397811</span></span></code></pre>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_ablation.html">plot_ablation</a></span><span class="op">(</span></span>
+<span>  <span class="va">pregnancy_stack</span>, </span>
+<span>  metric_fun <span class="op">=</span> <span class="va">metric_fun</span>, </span>
+<span>  metric_name <span class="op">=</span> <span class="st">"RMSE"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="pregnancy_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="700"></p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Reverse ablation</span></span>
+<span><span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="../reference/compute_ablation.html">compute_ablation</a></span><span class="op">(</span></span>
+<span>  <span class="va">pregnancy_stack</span>, </span>
+<span>  metric_fun <span class="op">=</span> <span class="va">metric_fun</span>, </span>
+<span>  metric_name <span class="op">=</span> <span class="st">"RMSE"</span>, </span>
+<span>  reverse <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##                 Row Ablation_1 Ablation_2 Ablation_3 Ablation_4 Ablation_5</span></span>
+<span><span class="co">##              &lt;char&gt;      &lt;num&gt;      &lt;num&gt;      &lt;num&gt;      &lt;num&gt;      &lt;num&gt;</span></span>
+<span><span class="co">## 1:     Cellfree RNA   2.986322   8.181560   7.695312  33.165760  40.263147</span></span>
+<span><span class="co">## 2:   Plasma Luminex   6.109482   7.077252  10.012191  66.834240         NA</span></span>
+<span><span class="co">## 3:    Serum Luminex  15.742591   8.352738   0.000000   0.000000  35.039780</span></span>
+<span><span class="co">## 4:       Microbiome  15.616400  24.712844  14.023535   0.000000  24.697073</span></span>
+<span><span class="co">## 5:    Immune System   9.385203  15.843630  68.268962         NA         NA</span></span>
+<span><span class="co">## 6:     Metabolomics  25.285246         NA         NA         NA         NA</span></span>
+<span><span class="co">## 7: Plasma Somalogic  24.874757  35.831976         NA         NA         NA</span></span>
+<span><span class="co">## 8:             RMSE   3.065251   3.658108   5.053631   6.563378   8.024488</span></span>
+<span><span class="co">##    Ablation_6 Ablation_7</span></span>
+<span><span class="co">##         &lt;num&gt;      &lt;num&gt;</span></span>
+<span><span class="co">## 1:         NA         NA</span></span>
+<span><span class="co">## 2:         NA         NA</span></span>
+<span><span class="co">## 3:  60.882182         NA</span></span>
+<span><span class="co">## 4:  39.117818 100.000000</span></span>
+<span><span class="co">## 5:         NA         NA</span></span>
+<span><span class="co">## 6:         NA         NA</span></span>
+<span><span class="co">## 7:         NA         NA</span></span>
+<span><span class="co">## 8:   8.448777   8.512699</span></span></code></pre>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">caretMultimodal</span><span class="fu">::</span><span class="fu"><a href="../reference/plot_ablation.html">plot_ablation</a></span><span class="op">(</span></span>
+<span>  <span class="va">pregnancy_stack</span>, </span>
+<span>  metric_fun <span class="op">=</span> <span class="va">metric_fun</span>, </span>
+<span>  metric_name <span class="op">=</span> <span class="st">"RMSE"</span>, </span>
+<span>  reverse <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="pregnancy_files/figure-html/unnamed-chunk-4-2.png" class="r-plt" alt="" width="700"></p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
